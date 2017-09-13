@@ -65,6 +65,7 @@ app.service("apiSearchService",function($q, $http, $location){
             selectedObj.trackLength = convertTrackTimeMilliseconds(arrResult[i].trackTimeMillis);
             selectedObj.releaseDate = arrResult[i].releaseDate.slice(0,10);
             selectedObj.trackViewUrl = arrResult[i].trackViewUrl;
+            selectedObj.database = "iTunes";
 
             songSearchiTunesArray.push(selectedObj);
           }
@@ -91,6 +92,7 @@ app.service("apiSearchService",function($q, $http, $location){
             selectedObj.trackLength = convertTrackTimeMilliseconds(arrResult[i].trackTimeMillis);
             selectedObj.releaseDate = arrResult[i].releaseDate.slice(0,10);
             selectedObj.trackViewUrl = arrResult[i].trackViewUrl;
+            selectedObj.database = "iTunes";
 
             songArtistSearchiTunesArray.push(selectedObj);
           }

@@ -1,12 +1,25 @@
 <div> <h2>Search Result</h2></div>
-
-<div ng-repeat="songObj in apiSearchService.arraySongObjFinal">
-<ul>
-  <li id="artist">{{songObj.artistName}}</li>
-  <li id="track">{{songObj.trackCensoredName}}</li>
-  <li id="track">{{songObj.trackLength}}</li>
-  <li id="release-date">{{songObj.releaseDate}}</li>
-  <li><a ng-href="{{songObj.trackViewUrl}}">Buy</a></li>
-  <li><a href="#">Save</a></li>
-</ul>
+<div class="row results-width">
+  <table class="table table-sm table-striped table-hover">
+    <thead>
+      <th>Artist</th>
+      <th>Track</th>
+      <th>Length</th>
+      <th>Release Date</th>
+      <th>Database</th>
+      <th>Buy/DL</th>
+      <th>Save</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="songObj in apiSearchService.arraySongObjFinal">
+        <td>{{songObj.artistName}}</td>
+        <td>{{songObj.trackCensoredName}}</td>
+        <td>{{songObj.trackLength}}</td>
+        <td>{{songObj.releaseDate}}</td>
+        <td>{{songObj.database}}</td>
+        <td><a ng-href="{{songObj.trackViewUrl}}">Buy</a></td>
+        <td><a href="#">Save</a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
