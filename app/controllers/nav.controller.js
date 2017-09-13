@@ -7,15 +7,13 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
   let user = userFactory.getCurrentUser();
 
   const searchDBs = function(dbToggleInfoArray, searchInput){
-
       //take dbToggleInfoArray and select appropriate db functions
+
       //if iTunes is toggled on
       apiSearchService.searchiTunes(searchInput)
        .then(()=>{
         $location.url("/search");
        });
-   
-      //return Array of Songs after Functions are called
   };
 
   $scope.searchFunct = function(keyEvent){
@@ -34,7 +32,9 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
     } 
   };
 
-
+  $scope.login = () =>{
+    $location.url('/login');
+  };
 	$scope.logout = () => {
         userFactory.logOut();
       };
@@ -47,7 +47,6 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
     } else {
       $scope.isLoggedIn = false;
       // console.log("user logged in?", $scope.isLoggedIn);
-      $window.location.href = "#!/login";
     }
   });	
 

@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark" ng-controller="navCtrl">
-      <a class="navbar-brand site-title" href="#">SongSearch</a>
+      <a class="navbar-brand site-title" href="#!/">SongSearch</a>
       <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -16,7 +16,7 @@
             <a class="nav-link" ng-href="#!/profile">User</a>
           </li>
           <li class="nav-item" ng-show="!isLoggedIn">
-            <a class= "nav-link" >Login</a></li>
+            <a class="nav-link" ng-click="login()">Login</a></li>
           <li class="nav-item" ng-show="isLoggedIn">
             <a class="nav-link" ng-click="logout()" >Logout</a></li> 
         </ul>

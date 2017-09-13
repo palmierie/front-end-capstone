@@ -28,10 +28,10 @@ app.config(($routeProvider) => {
 		templateUrl:'partials/search-results.html',
 		controller: 'searchCtrl'
 	})
-	// .when('/login',{
-	// 	templateUrl: 'partials/user.html',
-	// 	controller: 'userCtrl'
-	// })
+	.when('/login', {
+		templateUrl: 'partials/user.html',
+		controller: 'userCtrl'
+	})
 	.otherwise('/');
 });
 
