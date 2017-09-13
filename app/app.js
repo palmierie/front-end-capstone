@@ -21,24 +21,17 @@ let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
 app.config(($routeProvider) => {
 	$routeProvider
 	.when('/', {
-		templateUrl:'partials/search-results.html',
-		controller: 'searchCtrl'
-		// resolve: {isAuth}
+		templateUrl:'partials/home.html',
+		controller: 'homeCtrl'
 	})
 	.when('/search', {
 		templateUrl:'partials/search-results.html',
 		controller: 'searchCtrl'
-		// resolve: {isAuth}
 	})
 	// .when('/login',{
 	// 	templateUrl: 'partials/user.html',
 	// 	controller: 'userCtrl'
 	// })
-	.when('/home', {
-		templateUrl: 'partials/home.html',
-		controller: 'homeCtrl',
-		// resolve: {isAuth}
-	})
 	.otherwise('/');
 });
 
