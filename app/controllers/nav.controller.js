@@ -7,9 +7,6 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
   let user = userFactory.getCurrentUser();
 
   const searchDBs = function(dbToggleInfoArray, searchInput){
-      console.log('searchInput Nav Ctrl', searchInput);
-      //initialize array of Song Objects for DOM display
-
 
       //take dbToggleInfoArray and select appropriate db functions
       //if iTunes is toggled on
