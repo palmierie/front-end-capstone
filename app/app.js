@@ -1,6 +1,6 @@
 "use strict";
 
-const app = angular.module("ManterestApp", ["ngRoute"]);
+const app = angular.module("SongSearchApp", ["ngRoute"]);
 
 let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
   console.log("userFactory is", userFactory);
@@ -21,18 +21,23 @@ let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
 app.config(($routeProvider) => {
 	$routeProvider
 	.when('/', {
-		templateUrl: 'partials/home.html',
-		controller: 'homeCtrl',
-		resolve: {isAuth}
+		templateUrl:'partials/search-results.html',
+		controller: 'searchCtrl'
+		// resolve: {isAuth}
 	})
-	.when('/login',{
-		templateUrl: 'partials/user.html',
-		controller: 'userCtrl'
+	.when('/search', {
+		templateUrl:'partials/search-results.html',
+		controller: 'searchCtrl'
+		// resolve: {isAuth}
 	})
+	// .when('/login',{
+	// 	templateUrl: 'partials/user.html',
+	// 	controller: 'userCtrl'
+	// })
 	.when('/home', {
 		templateUrl: 'partials/home.html',
 		controller: 'homeCtrl',
-		resolve: {isAuth}
+		// resolve: {isAuth}
 	})
 	.otherwise('/');
 });
@@ -48,6 +53,8 @@ app.run(($location, FBCreds) => {
 
 	firebase.initializeApp(authConfig);
 });
+
+
 
 
 // // example of $rootScope

@@ -1,0 +1,12 @@
+<div> <h2>Search Result</h2></div>
+
+<div ng-repeat="songObj in apiSearchService.arraySongObjFinal">
+<ul>
+  <li id="artist">{{songObj.artistName}}</li>
+  <li id="track">{{songObj.trackCensoredName}}</li>
+  <li id="track">{{songObj.trackLength}}</li>
+  <li id="release-date">{{songObj.releaseDate}}</li>
+  <li><a ng-href="{{songObj.trackViewUrl}}">Buy</a></li>
+  <li><a href="#">Save</a></li>
+</ul>
+</div>
