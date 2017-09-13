@@ -78,7 +78,7 @@ app.factory("userFactory", function($q, $http, FBCreds){
 /* The three functions below are used in sequence to:
 1. Get the current logged in user from the auth side of FB,
 2. Check and see if that user already exists in our Users collection, and if not,
-3. Add them to our Users collection*/
+3. Add them to our Users collection */
 
 // Gets the current user from the **Authentication/Users** section of Firebase (not our db section)
     const getFBCurrentUser = function () {
