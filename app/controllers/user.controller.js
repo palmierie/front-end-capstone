@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("userCtrl", function ($scope, $window, userFactory, $location) {
+app.controller("userCtrl", function ($scope, $window, userFactory, $location, dbTglFactory) {
 
 	console.log("userCtrl loaded");
 
@@ -118,18 +118,31 @@ app.controller("userCtrl", function ($scope, $window, userFactory, $location) {
 				if(isInFirebase === false) {
 					if($scope.displayName === ""){
 						let userObj = {
-							displayName: user.displayName,
+							            displayName: user.displayName,
 	                      	uid: user.uid,
-	                       	photoURL: user.photoURL
+													photoURL: user.photoURL,
+													toggleSettings: {
+																iTunes: true,
+																Beatport: true,
+																BPMSupreme: true
+													}
 						};
+				
+						
 						console.log("userObj in addUser", userObj);
 						userFactory.addUserToFirebase(userObj);
 					}else {
 						let userObj = {
-							displayName: $scope.displayName,
+							            displayName: $scope.displayName,
 	                      	uid: user.uid,
-	                       	photoURL: user.photoURL
+													photoURL: user.photoURL,
+													toggleSettings: {
+																iTunes: true,
+																Beatport: true,
+																BPMSupreme: true
+													}																	
 						};
+				
 						console.log("userObj in addUser", userObj);
 						userFactory.addUserToFirebase(userObj);
 					}

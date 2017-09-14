@@ -1,0 +1,21 @@
+<div>
+  <div class="row">
+    <h2>Toggle Database Search</h2>
+  </div>
+  <div class="row">
+    <p>Choose which databases to search:</p>
+  </div>
+  <div class="row">
+    <div class="inset" ng-cloak>
+      <md-switch ng-model="data.dbiTunes" aria-label="iTunes Switch" ng-change="updateFB()">
+        iTunes: {{ data.dbiTunes }}
+      </md-switch>
+      <md-switch ng-model="data.dbBeatport" aria-label="Beatport Switch" ng-change="updateFB()">
+        Beatport: {{ data.dbBeatport }}
+      </md-switch>
+      <md-switch ng-model="data.dbBPMSupreme" aria-label="BPMSupreme Switch" ng-change="updateFB()">
+        BPM Supreme: {{ data.dbBPMSupreme }}
+      </md-switch>
+    </div>
+  </div>
+</div>
