@@ -29,6 +29,8 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
       searchInput = $scope.searchInput;
       // perform Search passing Search input and db toggle info
       searchDBs(dbTglinfo, searchInput);
+
+    
     } 
   };
 

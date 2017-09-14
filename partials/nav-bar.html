@@ -6,19 +6,19 @@
 
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <form class="form-inline mt-2 mt-md-0">
-          <input class="form-control mr-2" size="60" type="text" placeholder="Search" aria-label="Search" ng-keypress="searchFunct($event)" ng-model="searchInput">
+          <input class="form-control mr-2" size="60" type="text" autofocus="true" placeholder="Search" aria-label="Search" ng-keypress="searchFunct($event)" ng-model="searchInput">
         </form>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link" href="#">My List</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" ng-href="#!/profile">User</a>
-          </li>
           <li class="nav-item" ng-show="!isLoggedIn">
             <a class="nav-link" ng-click="login()">Login</a></li>
           <li class="nav-item" ng-show="isLoggedIn">
             <a class="nav-link" ng-click="logout()" >Logout</a></li> 
+          <li class="nav-item">
+            <a class="nav-link" ng-href="#!/settings">Settings</a>
+          </li>
         </ul>
         
         

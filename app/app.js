@@ -1,6 +1,6 @@
 "use strict";
 
-const app = angular.module("SongSearchApp", ["ngRoute"]);
+const app = angular.module("SongSearchApp", ["ngRoute", "ngMaterial"]);
 
 let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
   console.log("userFactory is", userFactory);
@@ -10,7 +10,8 @@ let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
       console.log("Authentication Success");
       resolve();
     }else {
-      console.log("Authentication reject");
+			console.log("Authentication reject");
+			//  Set Up Alert Message ************
       reject();
     }
   });
@@ -32,6 +33,11 @@ app.config(($routeProvider) => {
 		templateUrl: 'partials/user.html',
 		controller: 'userCtrl'
 	})
+	.when('/settings', {
+		templateUrl: 'partials/db-toggle.html',
+		controller: 'dbTglCtrl',
+		resolve: {isAuth}
+	})
 	.otherwise('/');
 });
 
@@ -48,7 +54,7 @@ app.run(($location, FBCreds) => {
 });
 
 
-
+  
 
 // // example of $rootScope
 // app.run(function($rootScope){
