@@ -31,7 +31,7 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
             console.log('search Beatport', searchInput);
             apiSearchService.searchBeatport(searchInput)
             .then(()=>{
-              
+              $location.url("/search");
             });
             break;
         } 
