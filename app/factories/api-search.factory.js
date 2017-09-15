@@ -125,7 +125,66 @@ app.service("apiSearchService",function($q, $http, $location){
 
 
 
-  this.searchBeatport = function(search){
+  // //function searchBeatportSongs(search){   //USE THIS NAME 
+  // this.searchBeatport = function(search){ 
+  //   return $q((resolve, reject)=>{
+  //     // var headers = {
+	// 		// 	'Access-Control-Allow-Origin' : '*'
+  //     //  // 'Access-Control-Allow-Methods' : 'GET',
+  //     //  // "cache-control": "no-cache",
+  //     //  // "postman-token": "00a2f541-2236-a387-e9a6-c2329912a03f"
+  //     // };
+  //     var songBeatportArray = [];
+  //     let bpTrackUrl = 'https://www.beatport.com/track/';
+      
+  //     $http.get(`https://www.beatport.com/search/tracks?q=${search}&per-page=50`)
+  //     .then((result)=>{
+  //       //console.log('back from search bp', result.data);
+  //       //slice to <script id="data-objects">
+  //       let start1 = result.data.indexOf("data-objects");
+  //       let string1 = result.data.slice(start1);      
+  //       //slice to "tracks"
+  //       let start2 = string1.indexOf('"tracks"');
+  //       let string2 = string1.slice(start2);
+        
+  //       //end slice to window.Sliders
+  //       let end1 = string2.indexOf("window.Sliders");
+  //       let end2 = end1 - 12;
+  //       let string3 = string2.slice(0,end2);
+  //       //console.log('cut string3', string3);
+  //       let string4 = `{${string3}}`;
+  //       let jsonObj = JSON.parse(string4);
+  //       let tracksObjArr = jsonObj.tracks;
+  //       console.log('jsonobj', tracksObjArr);
+     
+  //       for (var i = 0; i < tracksObjArr.length; i++) {
+  //           let selectedObj = {};
+  //           let artistNames = [];
+  //           for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
+  //             artistNames.push(tracksObjArr[i].artists[k].name);
+  //           }
+  //           selectedObj.artistName = artistNames.join(', ');
+  //           selectedObj.trackCensoredName = tracksObjArr[i].title;
+  //           selectedObj.trackLength = tracksObjArr[i].duration.minutes;
+  //           selectedObj.releaseDate = tracksObjArr[i].date.released;
+  //           selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
+  //           selectedObj.database = "Beatport";
+
+  //           songBeatportArray.push(selectedObj);
+  //       }
+  //       console.log('songBeatportArray', songBeatportArray);
+          
+  //       this.arraySongObjFinal = this.arraySongObjFinal.concat(songBeatportArray);
+  //       resolve(this.arraySongObjFinal);
+  //     });
+
+
+  //   });
+  // };
+
+
+  /**************** */
+  function searchBpArtistLink(search){
     return $q((resolve, reject)=>{
       // var headers = {
 			// 	'Access-Control-Allow-Origin' : '*'
@@ -136,51 +195,64 @@ app.service("apiSearchService",function($q, $http, $location){
       var songBeatportArray = [];
       let bpTrackUrl = 'https://www.beatport.com/track/';
       
-      $http.get(`https://www.beatport.com/search/tracks?q=${search}&per-page=50`)
+      $http.get(`https://www.beatport.com/search/?q=${search}`)
       .then((result)=>{
-      //console.log('back from search bp', result.data);
-      //slice to <script id="data-objects">
-      let start1 = result.data.indexOf("data-objects");
-      let string1 = result.data.slice(start1);      
-      //slice to "tracks"
-      let start2 = string1.indexOf('"tracks"');
-      let string2 = string1.slice(start2);
-      
-      //end slice to window.Sliders
-      let end1 = string2.indexOf("window.Sliders");
-      let end2 = end1 - 12;
-      let string3 = string2.slice(0,end2);
-      //console.log('cut string3', string3);
-      let string4 = `{${string3}}`;
-      let jsonObj = JSON.parse(string4);
-      let tracksObjArr = jsonObj.tracks;
-      console.log('jsonobj', tracksObjArr);
-      function artistNameGrab(){
-
-      }
-
-      for (var i = 0; i < tracksObjArr.length; i++) {
-          let selectedObj = {};
-          let artistNames = [];
-          for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
-            artistNames.push(tracksObjArr[i].artists[k].name);
-          }
-          selectedObj.artistName = artistNames.join(', ');
-          selectedObj.trackCensoredName = tracksObjArr[i].title;
-          selectedObj.trackLength = tracksObjArr[i].duration.minutes;
-          selectedObj.releaseDate = tracksObjArr[i].date.released;
-          selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
-          selectedObj.database = "Beatport";
-
-          songBeatportArray.push(selectedObj);
-      }
-        console.log('songBeatportArray', songBeatportArray);
-        
-       this.arraySongObjFinal = this.arraySongObjFinal.concat(songBeatportArray);
-      resolve(this.arraySongObjFinal);
+        //slice to artist-gradient-overlay
+        let start0 = result.data.indexOf('a href="/artist');
+        let start1 = start0 + 8;
+        let end0 = result.data.indexOf("artist-gradient-overlay");
+        let end1 = end0 - 27;
+        let string1 = result.data.slice(start1, end1);
+        console.log('cut string1', string1);
+        resolve(string1);
       });
+    });
+  }
 
-
+  this.searchBeatport = function(search){
+    return $q((resolve, reject)=>{
+      searchBpArtistLink(search)
+        .then((artistLink)=>{
+          console.log('artistLink', artistLink);
+          
+          $http.get(`https://www.beatport.com${artistLink}`)
+            .then((artistResult)=>{
+              console.log('artist result', artistResult);
+              
+            });
+        });
+      
+    
     });
   };
-});
+      
+      
+
+        // let jsonObj = JSON.parse(string4);
+        // let tracksObjArr = jsonObj.tracks;
+        // console.log('jsonobj', tracksObjArr);
+     
+        // for (var i = 0; i < tracksObjArr.length; i++) {
+        //     let selectedObj = {};
+        //     let artistNames = [];
+        //     for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
+        //       artistNames.push(tracksObjArr[i].artists[k].name);
+        //     }
+        //     selectedObj.artistName = artistNames.join(', ');
+        //     selectedObj.trackCensoredName = tracksObjArr[i].title;
+        //     selectedObj.trackLength = tracksObjArr[i].duration.minutes;
+        //     selectedObj.releaseDate = tracksObjArr[i].date.released;
+        //     selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
+        //     selectedObj.database = "Beatport";
+
+        //     songBeatportArray.push(selectedObj);
+        // }
+        // console.log('songBeatportArray', songBeatportArray);
+          
+        // this.arraySongObjFinal = this.arraySongObjFinal.concat(songBeatportArray);
+        // resolve(this.arraySongObjFinal);
+      /************* */
+
+  
+  
+  });
