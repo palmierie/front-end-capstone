@@ -29,7 +29,10 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
           case "Beatport":
             //search Beatport
             console.log('search Beatport', searchInput);
-            
+            apiSearchService.searchBeatport(searchInput)
+            .then(()=>{
+              
+            });
             break;
         } 
       });

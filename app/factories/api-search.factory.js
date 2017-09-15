@@ -103,4 +103,40 @@ app.service("apiSearchService",function($q, $http, $location){
       });
     });
   }
+
+
+  this.searchBeatport = function(search){
+    search = "calvin+harris";
+    return $q((resolve, reject)=>{
+      // var headers = {
+			// 	'Access-Control-Allow-Origin' : '*'
+      //  // 'Access-Control-Allow-Methods' : 'GET',
+      //  // "cache-control": "no-cache",
+      //  // "postman-token": "00a2f541-2236-a387-e9a6-c2329912a03f"
+			// };
+       $http.get(`https://www.beatport.com/search/tracks?q=${search}`)
+       .then((result)=>{
+        //console.log('back from search bp', result.data);
+        //slice to <script id="data-objects">
+        let start1 = result.data.indexOf("data-objects");
+        let string1 = result.data.slice(start1);      
+        //slice to "tracks"
+        let start2 = string1.indexOf('"tracks"');
+        let string2 = string1.slice(start2);
+        
+        //end slice to window.Sliders
+        let end1 = string2.indexOf("window.Sliders");
+        let end2 = end1 - 12;
+        let string3 = string2.slice(0,end2);
+        //console.log('cut string3', string3);
+        let string4 = `{${string3}}`;
+        let jsonobj = JSON.parse(string4);
+        console.log('jsonobj', jsonobj);
+        
+        resolve();
+       });
+
+
+    });
+  };
 });
