@@ -3,7 +3,7 @@
 app.service("apiSearchService",function($q, $http, $location){
 
   this.arraySongObjFinal = [];
-
+  //collects all arrays from all functions
   let tempArray = [];
 
   //combines iTunes Search for Artist and Track Title
@@ -24,16 +24,19 @@ app.service("apiSearchService",function($q, $http, $location){
   this.songArrayFunct = function(arraySongObj){
    // this.arraySongObjFinal.concat(arraySongObj);
     tempArray.push(arraySongObj);
-    let tempFlatArray = [].concat.apply([],tempArray);
-    this.arraySongObjFinal = tempFlatArray;
+    this.arraySongObjFinal = [].concat.apply([],tempArray);
     console.log('tempArray', tempArray);
-    console.log('tempFLATArray', tempFlatArray);
+    //console.log('tempFLATArray', tempFlatArray);
     
     //let flattenedArray = [].concat.apply([],arraySongObj);
     console.log('this.arraySongObjFinal', this.arraySongObjFinal);
     console.log('arraySongObj', arraySongObj);
     
     return this.arraySongObjFinal;
+  };
+
+  this.clearTempArray = function(){
+    tempArray = [];
   };
 
 

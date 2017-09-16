@@ -16,6 +16,7 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
       dbToggleInfoArray.forEach(db=>{
         switch (db){
           case "iTunes":
+            //search iTunes
             apiSearchService.searchiTunes(searchInput)
             .then(()=>{
               $location.url("/search");
@@ -34,9 +35,11 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
               $location.url("/search");
             });
             break;
-        } 
+        }
+        // initialize tempArray on service factory for new input
+        apiSearchService.clearTempArray(); 
       });
-      //if iTunes is toggled on
+
   };
 
   $scope.searchFunct = function(keyEvent){
