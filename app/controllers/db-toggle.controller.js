@@ -4,6 +4,8 @@ app.controller("dbTglCtrl", function($scope, userFactory, dbTglFactory){
   let user = userFactory.getCurrentUser();
   let changedUserObj = {};
 
+  console.log('WHAT IS TE USERRRR', user);
+  
   function getUserDBSettings(){
     dbTglFactory.getDBTgl(user)
     .then((userObj)=>{

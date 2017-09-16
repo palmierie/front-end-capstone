@@ -4,33 +4,57 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
 
   $scope.isLoggedIn = false;
   let searchInput = $scope.searchInput;
-  let user = userFactory.getCurrentUser();
+  let user = '';
 
+  userFactory.isAuthenticated()
+  .then((x)=>{
+    user = userFactory.getCurrentUser();
+  });
+  
   const searchDBs = function(dbToggleInfoArray, searchInput){
       //take dbToggleInfoArray and select appropriate db functions
+      dbToggleInfoArray.forEach(db=>{
+        switch (db){
+          case "iTunes":
+            //search iTunes
+            apiSearchService.searchiTunes(searchInput)
+            .then(()=>{
+              $location.url("/search");
+            });
+            break;
+          case "BPMSupreme":
+            //search BPMSupreme
+            console.log('search BPM Supreme', searchInput);
+            
+            break;
+          case "Beatport":
+            //search Beatport
+            console.log('search Beatport', searchInput);
+            apiSearchService.searchBeatport(searchInput)
+            .then(()=>{
+              $location.url("/search");
+            });
+            break;
+        }
+        // initialize tempArray on service factory for new input
+        apiSearchService.clearTempArray(); 
+      });
 
-      //if iTunes is toggled on
-      apiSearchService.searchiTunes(searchInput)
-       .then(()=>{
-        $location.url("/search");
-       });
   };
 
   $scope.searchFunct = function(keyEvent){
     if(keyEvent.which === 13){
       //get db Toggle Info
-      let dbTglinfo = [];
-      // dbTglFactory.getDBTgl(user)
-      // .then((toggleInfoArray)=>{
-      //   dbTglinfo = toggleInfoArray;
-      // });
-
-      // get search input
-      searchInput = $scope.searchInput;
-      // perform Search passing Search input and db toggle info
-      searchDBs(dbTglinfo, searchInput);
-
-    
+      dbTglFactory.getDBTgl(user)
+      .then((data)=>{
+        console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
+        let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
+        console.log('dbTglinfo', dbTglinfo);
+        // get search input
+        searchInput = $scope.searchInput;
+        // perform Search passing Search input and db toggle info
+        searchDBs(dbTglinfo, searchInput);
+      });
     } 
   };
 
