@@ -11,14 +11,14 @@
       <th>Save</th>
     </thead>
     <tbody>
-      <tr ng-repeat="songObj in apiSearchService.arraySongObjFinal">
+      <tr class="song-object" ng-repeat="songObj in apiSearchService.arraySongObjFinal">
         <td>{{songObj.artistName}}</td>
         <td>{{songObj.trackCensoredName}}</td>
         <td>{{songObj.trackLength}}</td>
         <td>{{songObj.releaseDate}}</td>
         <td>{{songObj.database}}</td>
         <td><a ng-href="{{songObj.trackViewUrl}}" target="_blank">Buy</a></td>
-        <td><a href="#">Save</a></td>
+        <td><a href="#!/search" ng-click="saveFunction($event)">Save</a></td>
       </tr>
     </tbody>
   </table>
