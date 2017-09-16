@@ -5,7 +5,7 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
   $scope.isLoggedIn = false;
   let searchInput = $scope.searchInput;
   let user = '';
-
+  //authenticate user or else getCurrentUser is null
   userFactory.isAuthenticated()
   .then((x)=>{
     user = userFactory.getCurrentUser();
