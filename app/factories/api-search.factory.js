@@ -4,14 +4,7 @@ app.service("apiSearchService",function($q, $http, $location){
 
   this.arraySongObjFinal = [];
 
-  //var arraySongObj = [];
-
-  // const returnSearch = function(arraySongObj){
-  //   $location.url("/searchResult");
-  //   console.log('array Song object', arraySongObj);
-    
-  //   return arraySongObj;
-  // };
+  let tempArray = [];
 
   //combines iTunes Search for Artist and Track Title
   this.searchiTunes = function(searchInput){
@@ -29,7 +22,17 @@ app.service("apiSearchService",function($q, $http, $location){
   };
 
   this.songArrayFunct = function(arraySongObj){
-    this.arraySongObjFinal = arraySongObj;
+   // this.arraySongObjFinal.concat(arraySongObj);
+    tempArray.push(arraySongObj);
+    let tempFlatArray = [].concat.apply([],tempArray);
+    this.arraySongObjFinal = tempFlatArray;
+    console.log('tempArray', tempArray);
+    console.log('tempFLATArray', tempFlatArray);
+    
+    //let flattenedArray = [].concat.apply([],arraySongObj);
+    console.log('this.arraySongObjFinal', this.arraySongObjFinal);
+    console.log('arraySongObj', arraySongObj);
+    
     return this.arraySongObjFinal;
   };
 
@@ -104,19 +107,19 @@ app.service("apiSearchService",function($q, $http, $location){
     });
   }
 
-  // this.searchBeatport = function(searchInput){
-  //   return $q((resolve, reject)=>{
-  //     var p1 = searchBeatportSongs(searchInput);
-  //     var p2 = searchBeatportArtists(searchInput);
+  this.searchBeatport = function(searchInput){
+    return $q((resolve, reject)=>{
+      var p1 = searchBeatportSongs(searchInput);
+      var p2 = searchBeatportArtists(searchInput);
 
-  //     Promise.all([p1,p2])
-  //       .then((arraySongObj)=>{
-  //         let flattenedArray = [].concat.apply([],arraySongObj);
-  //         this.songArrayFunct(flattenedArray);
-  //         resolve();
-  //       });
-  //   });
-  // };
+      Promise.all([p1,p2])
+        .then((arraySongObj)=>{
+          let flattenedArray = [].concat.apply([],arraySongObj);
+          this.songArrayFunct(flattenedArray);
+          resolve();
+        });
+    });
+  };
 
   // this.songArrayFunct = function(arraySongObj){
   //   this.arraySongObjFinal = arraySongObj;
@@ -125,62 +128,62 @@ app.service("apiSearchService",function($q, $http, $location){
 
 
 
-  // //function searchBeatportSongs(search){   //USE THIS NAME 
-  // this.searchBeatport = function(search){ 
-  //   return $q((resolve, reject)=>{
-  //     // var headers = {
-	// 		// 	'Access-Control-Allow-Origin' : '*'
-  //     //  // 'Access-Control-Allow-Methods' : 'GET',
-  //     //  // "cache-control": "no-cache",
-  //     //  // "postman-token": "00a2f541-2236-a387-e9a6-c2329912a03f"
-  //     // };
-  //     var songBeatportArray = [];
-  //     let bpTrackUrl = 'https://www.beatport.com/track/';
+  function searchBeatportSongs(search){   //USE THIS NAME 
+ // this.searchBeatport = function(search){ 
+    return $q((resolve, reject)=>{
+      // var headers = {
+			// 	'Access-Control-Allow-Origin' : '*'
+      //  // 'Access-Control-Allow-Methods' : 'GET',
+      //  // "cache-control": "no-cache",
+      //  // "postman-token": "00a2f541-2236-a387-e9a6-c2329912a03f"
+      // };
+      var songBeatportArray = [];
+      let bpTrackUrl = 'https://www.beatport.com/track/';
       
-  //     $http.get(`https://www.beatport.com/search/tracks?q=${search}&per-page=50`)
-  //     .then((result)=>{
-  //       //console.log('back from search bp', result.data);
-  //       //slice to <script id="data-objects">
-  //       let start1 = result.data.indexOf("data-objects");
-  //       let string1 = result.data.slice(start1);      
-  //       //slice to "tracks"
-  //       let start2 = string1.indexOf('"tracks"');
-  //       let string2 = string1.slice(start2);
+      $http.get(`https://www.beatport.com/search/tracks?q=${search}&per-page=50`)
+      .then((result)=>{
+        //console.log('back from search bp', result.data);
+        //slice to <script id="data-objects">
+        let start1 = result.data.indexOf("data-objects");
+        let string1 = result.data.slice(start1);      
+        //slice to "tracks"
+        let start2 = string1.indexOf('"tracks"');
+        let string2 = string1.slice(start2);
         
-  //       //end slice to window.Sliders
-  //       let end1 = string2.indexOf("window.Sliders");
-  //       let end2 = end1 - 12;
-  //       let string3 = string2.slice(0,end2);
-  //       //console.log('cut string3', string3);
-  //       let string4 = `{${string3}}`;
-  //       let jsonObj = JSON.parse(string4);
-  //       let tracksObjArr = jsonObj.tracks;
-  //       console.log('jsonobj', tracksObjArr);
+        //end slice to window.Sliders
+        let end1 = string2.indexOf("window.Sliders");
+        let end2 = end1 - 12;
+        let string3 = string2.slice(0,end2);
+        //console.log('cut string3', string3);
+        let string4 = `{${string3}}`;
+        let jsonObj = JSON.parse(string4);
+        let tracksObjArr = jsonObj.tracks;
+        console.log('jsonobj', tracksObjArr);
      
-  //       for (var i = 0; i < tracksObjArr.length; i++) {
-  //           let selectedObj = {};
-  //           let artistNames = [];
-  //           for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
-  //             artistNames.push(tracksObjArr[i].artists[k].name);
-  //           }
-  //           selectedObj.artistName = artistNames.join(', ');
-  //           selectedObj.trackCensoredName = tracksObjArr[i].title;
-  //           selectedObj.trackLength = tracksObjArr[i].duration.minutes;
-  //           selectedObj.releaseDate = tracksObjArr[i].date.released;
-  //           selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
-  //           selectedObj.database = "Beatport";
+        for (var i = 0; i < tracksObjArr.length; i++) {
+            let selectedObj = {};
+            let artistNames = [];
+            for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
+              artistNames.push(tracksObjArr[i].artists[k].name);
+            }
+            selectedObj.artistName = artistNames.join(', ');
+            selectedObj.trackCensoredName = tracksObjArr[i].title;
+            selectedObj.trackLength = tracksObjArr[i].duration.minutes;
+            selectedObj.releaseDate = tracksObjArr[i].date.released;
+            selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
+            selectedObj.database = "Beatport";
 
-  //           songBeatportArray.push(selectedObj);
-  //       }
-  //       console.log('songBeatportArray', songBeatportArray);
-          
-  //       this.arraySongObjFinal = this.arraySongObjFinal.concat(songBeatportArray);
-  //       resolve(this.arraySongObjFinal);
-  //     });
+            songBeatportArray.push(selectedObj);
+        }
+        console.log('songBeatportArray', songBeatportArray);
+        resolve(songBeatportArray);
+       // this.arraySongObjFinal = this.arraySongObjFinal.concat(songBeatportArray);
+       // resolve(this.arraySongObjFinal);
+      });
 
 
-  //   });
-  // };
+    });
+  }
 
 
   /**************** */
@@ -209,12 +212,13 @@ app.service("apiSearchService",function($q, $http, $location){
     });
   }
 
-  this.searchBeatport = function(search){
+  function searchBeatportArtists(search){  // use this name
+  //this.searchBeatport = function(search){
     return $q((resolve, reject)=>{
       searchBpArtistLink(search)
         .then((artistLink)=>{
           console.log('artistLink', artistLink);
-          var songBeatportArray = [];
+          var artistBeatportArray = [];
           let bpTrackUrl = 'https://www.beatport.com/track/';
           
           $http.get(`https://www.beatport.com${artistLink}/tracks?per-page=50`)
@@ -249,15 +253,15 @@ app.service("apiSearchService",function($q, $http, $location){
                 selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
                 selectedObj.database = "Beatport";
 
-                songBeatportArray.push(selectedObj);
+                artistBeatportArray.push(selectedObj);
               }
-              console.log('songBeatportArray', songBeatportArray);
-                
-              this.arraySongObjFinal = this.arraySongObjFinal.concat(songBeatportArray);
-              resolve(this.arraySongObjFinal);
+              console.log('songBeatportArray', artistBeatportArray);
+              resolve(artistBeatportArray);
+              //this.arraySongObjFinal = this.arraySongObjFinal.concat(artistBeatportArray);
+              //resolve(this.arraySongObjFinal);
             });
         });
     });
-  };
+  }
   
 });
