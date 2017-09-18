@@ -12,12 +12,12 @@
     </thead>
     <tbody>
       <tr class="song-object" ng-repeat="songObj in apiSearchService.arraySongObjFinal">
-        <td>{{songObj.artistName}}</td>
-        <td>{{songObj.trackCensoredName}}</td>
-        <td>{{songObj.trackLength}}</td>
-        <td>{{songObj.releaseDate}}</td>
-        <td>{{songObj.database}}</td>
-        <td><a ng-href="{{songObj.trackViewUrl}}" target="_blank">Buy</a></td>
+        <td id="artist-name">{{songObj.artistName}}</td>
+        <td id="track-name">{{songObj.trackCensoredName}}</td>
+        <td id="track-length">{{songObj.trackLength}}</td>
+        <td id="release-date">{{songObj.releaseDate}}</td>
+        <td id="song-database">{{songObj.database}}</td>
+        <td id="buy-url"><a ng-href="{{songObj.trackViewUrl}}" target="_blank">Buy</a></td>
         <td><a href="#!/search" ng-click="saveFunction($event)">Save</a></td>
       </tr>
     </tbody>

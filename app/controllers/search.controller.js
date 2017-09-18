@@ -13,7 +13,7 @@ app.controller("searchCtrl", function($scope, apiSearchService, myListFactory, u
   
   $scope.saveFunction = function(event){
     console.log('Save function clicked!');
-    console.log('event.currenttarget', event.currentTarget.parent);
+    console.log('event.currenttarget', event.currentTarget.parentElement.parentElement);
      
   };
 
