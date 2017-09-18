@@ -5,15 +5,20 @@ app.factory("myListFactory", function($q, $http){
 function getMyList(user){
   return $q((resolve, reject)=>{
    $http.get('');
-
+  })
+  .then(()=>{
+    //add id to each song
   });
 }
 
-function addToMyList(user){
-
+function addToMyList(user, songObj){
+  return $q((resolve, reject)=>{
+    $http.get('');
+ 
+   });
 }
 
-function deleteFromMyList(user){
+function deleteFromMyList(user, songObjId){
 
 }
 
