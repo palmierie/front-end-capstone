@@ -12,27 +12,23 @@ function makeSongID(){
   });
 }
 
-function getMyList(user){
+function addToMyList(id, patchObj){
   return $q((resolve, reject)=>{
-   $http.get('');
-  })
-  .then(()=>{
-    //add id to each song
-  });
-}
-
-function addToMyList(user, patchObj){
-  return $q((resolve, reject)=>{
-    console.log('shit that is passed ato addToMyList', "user", user, "patchobj", patchObj);
-    
-    //$http.patch('');
- 
+    $http.patch(`${FBCreds.databaseURL}/users/${id}.json`, patchObj)
+    .then((data)=>{
+      resolve();
+    });
    });
 }
 
-function deleteFromMyList(user, songObjId){
-
+function deleteFromMyList(id, songObjIdPosition){
+  return $q((resolve, reject)=>{
+    $http.delete(`${FBCreds.databaseURL}/users/${id}/myList/${songObjIdPosition}.json`)
+    .then(()=>{
+      resolve();
+    });
+  });
 }
 
-  return {getMyList, addToMyList, makeSongID, deleteFromMyList};
+  return {addToMyList, makeSongID, deleteFromMyList};
 });

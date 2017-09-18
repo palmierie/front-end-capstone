@@ -69,6 +69,9 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
 	$scope.logout = () => {
         userFactory.logOut();
       };
+  // $scope.myList = ()=>{
+  //   $location.url("/my-list");
+  // };
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       $scope.isLoggedIn = true;

@@ -12,10 +12,10 @@ app.controller("searchCtrl", function($scope, apiSearchService, myListFactory, u
   $scope.apiSearchService = apiSearchService;
 
   function buildPatchObject(savedObj){
-    let patchObj = {};
+    // let patchObj = {};
     userFactory.getCurrentUserFullObj(user)
     .then((userObj)=>{
-      patchObj = userObj;
+      let patchObj = userObj;
       // add song to myList array of objects
       let newMyListArray = []; 
       newMyListArray.push(savedObj);
@@ -23,10 +23,11 @@ app.controller("searchCtrl", function($scope, apiSearchService, myListFactory, u
       if (patchObj.myList !== undefined){
         newMyListArray.push(patchObj.myList);
       }
-      patchObj.myList = newMyListArray;
+      let flattenedArray = [].concat.apply([], newMyListArray);
+      patchObj.myList = flattenedArray;
       console.log('patch obj', patchObj);
       
-      myListFactory.addToMyList(user, patchObj);
+      myListFactory.addToMyList(userObj.id, patchObj);
     });
 
   }
