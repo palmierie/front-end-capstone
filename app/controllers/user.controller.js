@@ -47,7 +47,9 @@ app.controller("userCtrl", function ($scope, $window, userFactory, $location, db
 	};
 
 	// When login button is clicked, run loginInUser function to log in using existing user credentials provided
-	$scope.logIn = () => {
+	$scope.login = () => {
+		console.log('login called');
+		
 		logInUser($scope.account);
 	};
 
@@ -55,7 +57,8 @@ app.controller("userCtrl", function ($scope, $window, userFactory, $location, db
 	function logInUser(userCreds) {
 		userFactory.logIn(userCreds)
 		.then( () => {
-
+			console.log('loginUser called');
+			
 			$window.location.href = "#!/";
 		});
 	}

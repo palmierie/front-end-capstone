@@ -29,7 +29,6 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
             break;
           case "Beatport":
             //search Beatport
-            console.log('search Beatport', searchInput);
             apiSearchService.searchBeatport(searchInput)
             .then(()=>{
               $location.url("/search");
@@ -44,7 +43,13 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
 
   $scope.searchFunct = function(keyEvent){
     if(keyEvent.which === 13){
+      userFactory.isAuthenticated()
+      .then((x)=>{
+        user = userFactory.getCurrentUser();
+      });
       //get db Toggle Info
+      console.log('user', user);
+      
       dbTglFactory.getDBTgl(user)
       .then((data)=>{
         console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
