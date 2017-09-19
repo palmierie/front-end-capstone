@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("myListCtrl", function($scope, $route, $location, myListFactory, userFactory){
+app.controller("myListCtrl", function($scope, $window, myListFactory, userFactory){
   let user = '';
   //authenticate user or else getCurrentUser is null
   userFactory.isAuthenticated()
@@ -13,25 +13,35 @@ app.controller("myListCtrl", function($scope, $route, $location, myListFactory, 
   function displayList(id){
     userFactory.getCurrentUserFullObj(id)
     .then((userObj)=>{
-      console.log('userObj.mylist', userObj.myList);
-      $scope.arraySongObj = userObj.myList;
+      let patchObj = {};
+      patchObj = userObj;
+      //avoid null in myList Array
+      let songObjArray = [];
+      for (var k = 0; k < userObj.myList.length; k++) {
+         if(null !== userObj.myList[k]){
+           songObjArray.push(userObj.myList[k]);
+         }
+      }
+      $scope.arraySongObj = songObjArray;
       
       $scope.deleteFunction = function(event){
+        //build new array without
         let songID = event.currentTarget.parentElement.parentElement.getAttribute("user-song-id");
-        let songArr = [];
-        //add position to my List Array  -- delete factory needs position in $http url call
-        Object.keys(userObj.myList).forEach(function (key) {
-          userObj.myList[key].position = key;
-          songArr.push(userObj.myList[key]);
-        });
-        for (var i = 0; i < songArr.length; i++) {
-          if(songID === songArr[i].id){
-            console.log('this song id', songID, 'position', songArr[i].position);
-            myListFactory.deleteFromMyList(userObj.id, songArr[i].position);
-            $route.reload();
-          } 
+        let updatedSongArr = [];
+        for (var i = 0; i < songObjArray.length; i++) {
+          if(songID !== songObjArray[i].id){
+            updatedSongArr.push(songObjArray[i]);
+          }
         } 
+        patchObj.myList = updatedSongArr;
+        console.log('patchObj', patchObj);
+        
+        myListFactory.deleteFromMyList(userObj.id, patchObj)
+        .then(()=>{
+          $window.location.reload();
+        });
       };
+      /******** */
     });
   }
   

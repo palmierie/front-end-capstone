@@ -21,11 +21,15 @@ function addToMyList(id, patchObj){
    });
 }
 
-function deleteFromMyList(id, songObjIdPosition){
+function deleteFromMyList(id, patchObj){
   return $q((resolve, reject)=>{
-    $http.delete(`${FBCreds.databaseURL}/users/${id}/myList/${songObjIdPosition}.json`)
-    .then(()=>{
+    let parseObj = angular.toJson(patchObj);
+    $http.patch(`${FBCreds.databaseURL}/users/${id}.json`, parseObj)
+    .then((data)=>{
       resolve();
+    })
+    .catch((error)=>{
+      reject(error);
     });
   });
 }
