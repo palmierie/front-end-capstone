@@ -27,7 +27,7 @@ app.controller("searchCtrl", function($scope, apiSearchService, myListFactory, u
       patchObj.myList = flattenedArray;
       console.log('patch obj', patchObj);
       
-      myListFactory.addToMyList(userObj.id, patchObj);
+      myListFactory.patchMyList(userObj.id, patchObj);
     });
 
   }

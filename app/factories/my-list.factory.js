@@ -12,7 +12,7 @@ function makeSongID(){
   });
 }
 
-function addToMyList(id, patchObj){
+function patchMyList(id, patchObj){
   return $q((resolve, reject)=>{
     $http.patch(`${FBCreds.databaseURL}/users/${id}.json`, patchObj)
     .then((data)=>{
@@ -21,18 +21,5 @@ function addToMyList(id, patchObj){
    });
 }
 
-function deleteFromMyList(id, patchObj){
-  return $q((resolve, reject)=>{
-    let parseObj = angular.toJson(patchObj);
-    $http.patch(`${FBCreds.databaseURL}/users/${id}.json`, parseObj)
-    .then((data)=>{
-      resolve();
-    })
-    .catch((error)=>{
-      reject(error);
-    });
-  });
-}
-
-  return {addToMyList, makeSongID, deleteFromMyList};
+  return {patchMyList, makeSongID};
 });

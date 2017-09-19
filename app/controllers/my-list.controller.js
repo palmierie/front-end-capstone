@@ -15,33 +15,17 @@ app.controller("myListCtrl", function($scope, $window, myListFactory, userFactor
     .then((userObj)=>{
       let patchObj = {};
       patchObj = userObj;
-      //avoid null in myList Array
-      let songObjArray = [];
-      for (var k = 0; k < userObj.myList.length; k++) {
-         if(null !== userObj.myList[k]){
-           songObjArray.push(userObj.myList[k]);
-         }
-      }
-      $scope.arraySongObj = songObjArray;
+      $scope.arraySongObj = userObj.myList;
       
       $scope.deleteFunction = function(event){
-        //build new array without
         let songID = event.currentTarget.parentElement.parentElement.getAttribute("user-song-id");
-        let updatedSongArr = [];
-        for (var i = 0; i < songObjArray.length; i++) {
-          if(songID !== songObjArray[i].id){
-            updatedSongArr.push(songObjArray[i]);
-          }
-        } 
+        let updatedSongArr = userObj.myList.filter(song=> songID !== song.id);
         patchObj.myList = updatedSongArr;
-        console.log('patchObj', patchObj);
-        
-        myListFactory.deleteFromMyList(userObj.id, patchObj)
+        myListFactory.patchMyList(userObj.id, patchObj)
         .then(()=>{
           $window.location.reload();
         });
       };
-      /******** */
     });
   }
   
