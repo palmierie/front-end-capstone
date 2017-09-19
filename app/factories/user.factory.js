@@ -2,7 +2,7 @@
 
 /* provide the basic auth functionality for firebase */
 
-app.factory("userFactory", function($q, $http, FBCreds){
+app.factory("userFactory", function($q, $location, $http, FBCreds){
 
     // This is just the user's UID from Firebase
     let currentUser = null;
@@ -51,7 +51,10 @@ app.factory("userFactory", function($q, $http, FBCreds){
 
     const logOut = function(){
         console.log("logoutUser");
-        return firebase.auth().signOut();
+        return firebase.auth().signOut()
+        .then(()=>{
+            $location.url('/');
+        });
 
     };
 

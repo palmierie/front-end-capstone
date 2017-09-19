@@ -10,12 +10,12 @@
         </form>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">My List</a>
+            <a class="nav-link" ng-href="#!/my-list">My List</a>
           </li>
-          <li class="nav-item" ng-show="!isLoggedIn">
-            <a class="nav-link" ng-click="login()">Login</a></li>
+          <li class="nav-item"  ng-show="!isLoggedIn">
+            <a class="nav-link" href="" ng-click="login()">Login</a></li>
           <li class="nav-item" ng-show="isLoggedIn">
-            <a class="nav-link" ng-click="logout()" >Logout</a></li> 
+            <a class="nav-link" href="" ng-click="logout()" >Logout</a></li> 
           <li class="nav-item">
             <a class="nav-link" ng-href="#!/settings">Settings</a>
           </li>

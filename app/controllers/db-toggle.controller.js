@@ -29,7 +29,7 @@ app.controller("dbTglCtrl", function($scope, userFactory, dbTglFactory){
                 displayName: changedUserObj.displayName,
                 id: changedUserObj.id,
                 uid: changedUserObj.uid,
-                      toggleSettings: {
+                toggleSettings: {
                         iTunes: $scope.data.dbiTunes,
                         Beatport: $scope.data.dbBeatport,
                         BPMSupreme: $scope.data.dbBPMSupreme

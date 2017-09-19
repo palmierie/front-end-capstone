@@ -38,6 +38,11 @@ app.config(($routeProvider) => {
 		controller: 'dbTglCtrl',
 		resolve: {isAuth}
 	})
+	.when('/my-list', {
+		templateUrl: 'partials/my-list.html',
+		controller: 'myListCtrl',
+		resolve: {isAuth}
+	})
 	.otherwise('/');
 });
 
