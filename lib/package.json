@@ -25,6 +25,7 @@
     "angular-material": "^1.1.5",
     "angular-messages": "^1.6.6",
     "angular-route": "^1.6.4",
+    "angular-ui-bootstrap": "^2.5.0",
     "firebase": "^4.1.3"
   }
 }
