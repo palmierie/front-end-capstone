@@ -11,6 +11,21 @@ app.service("apiSearchService",function($q, $http, $location){
     return $q((resolve, reject)=>{
       var p1 = searchiTunesSongs(searchInput);
       var p2 = searchiTunesArtists(searchInput);
+      
+      Promise.all([p1,p2])
+      .then((arraySongObj)=>{
+        let flattenedArray = [].concat.apply([],arraySongObj);
+        this.songArrayFunct(flattenedArray);
+        resolve();
+      });
+    });
+  };
+  
+  //combines Beatport Search for Artist and Track Title
+  this.searchBeatport = function(searchInput){
+    return $q((resolve, reject)=>{
+      var p1 = searchBeatportSongs(searchInput);
+      var p2 = searchBeatportArtists(searchInput);
 
       Promise.all([p1,p2])
         .then((arraySongObj)=>{
@@ -20,27 +35,21 @@ app.service("apiSearchService",function($q, $http, $location){
         });
     });
   };
-
+  //combines results from all arrays
   this.songArrayFunct = function(arraySongObj){
-   // this.arraySongObjFinal.concat(arraySongObj);
     tempArray.push(arraySongObj);
     this.arraySongObjFinal = [].concat.apply([],tempArray);
     console.log('tempArray', tempArray);
-    //console.log('tempFLATArray', tempFlatArray);
-    
-    //let flattenedArray = [].concat.apply([],arraySongObj);
     console.log('this.arraySongObjFinal', this.arraySongObjFinal);
-    console.log('arraySongObj', arraySongObj);
-    
     return this.arraySongObjFinal;
   };
-
+  
   this.clearTempArray = function(){
     tempArray = [];
   };
 
 
-  // convert times
+  // convert times for iTunes return data
   function convertTrackTimeMilliseconds(trackInMilliseconds) {
     let trackTime = '';
     let convertSec = '';
@@ -81,7 +90,7 @@ app.service("apiSearchService",function($q, $http, $location){
         reject(error);
       });
     });
-  }
+  } // End function searchiTunesSongs
 
   function searchiTunesArtists(search){
     var songArtistSearchiTunesArray = [];
@@ -108,44 +117,16 @@ app.service("apiSearchService",function($q, $http, $location){
         reject(error);
       });
     });
-  }
+  } // End function searchiTunesArtists
 
-  this.searchBeatport = function(searchInput){
+  function searchBeatportSongs(search){
     return $q((resolve, reject)=>{
-      var p1 = searchBeatportSongs(searchInput);
-      var p2 = searchBeatportArtists(searchInput);
-
-      Promise.all([p1,p2])
-        .then((arraySongObj)=>{
-          let flattenedArray = [].concat.apply([],arraySongObj);
-          this.songArrayFunct(flattenedArray);
-          resolve();
-        });
-    });
-  };
-
-  // this.songArrayFunct = function(arraySongObj){
-  //   this.arraySongObjFinal = arraySongObj;
-  //   return this.arraySongObjFinal;
-  // };
-
-
-
-  function searchBeatportSongs(search){   //USE THIS NAME 
- // this.searchBeatport = function(search){ 
-    return $q((resolve, reject)=>{
-      // var headers = {
-			// 	'Access-Control-Allow-Origin' : '*'
-      //  // 'Access-Control-Allow-Methods' : 'GET',
-      //  // "cache-control": "no-cache",
-      //  // "postman-token": "00a2f541-2236-a387-e9a6-c2329912a03f"
-      // };
+  
       var songBeatportArray = [];
       let bpTrackUrl = 'https://www.beatport.com/track/';
       
       $http.get(`https://www.beatport.com/search/tracks?q=${search}&per-page=50`)
       .then((result)=>{
-        //console.log('back from search bp', result.data);
         //slice to <script id="data-objects">
         let start1 = result.data.indexOf("data-objects");
         let string1 = result.data.slice(start1);      
@@ -180,16 +161,12 @@ app.service("apiSearchService",function($q, $http, $location){
         }
         console.log('songBeatportArray', songBeatportArray);
         resolve(songBeatportArray);
-       // this.arraySongObjFinal = this.arraySongObjFinal.concat(songBeatportArray);
-       // resolve(this.arraySongObjFinal);
       });
 
 
     });
-  }
+  } // End function searchBeatportSongs
 
-
-  /**************** */
   function searchBpArtistLink(search){
     return $q((resolve, reject)=>{
       // var headers = {
@@ -213,10 +190,9 @@ app.service("apiSearchService",function($q, $http, $location){
         resolve(string1);
       });
     });
-  }
+  } // End function searchBpArtistLink
 
-  function searchBeatportArtists(search){  // use this name
-  //this.searchBeatport = function(search){
+  function searchBeatportArtists(search){
     return $q((resolve, reject)=>{
       searchBpArtistLink(search)
         .then((artistLink)=>{
@@ -260,11 +236,76 @@ app.service("apiSearchService",function($q, $http, $location){
               }
               console.log('songBeatportArray', artistBeatportArray);
               resolve(artistBeatportArray);
-              //this.arraySongObjFinal = this.arraySongObjFinal.concat(artistBeatportArray);
-              //resolve(this.arraySongObjFinal);
             });
         });
     });
-  }
+  } // End function searchBeatportArtists
+
+  this.searchHeadlinerMusicClub = function(search){
+    return $q((resolve, reject)=>{
+      $http.get(`https://headlinermusicclub.com/?s=${search}&post_type=audio`)
+      .then((result)=>{
+        let headlinerMCArray = [];
+        // console.log('data', result.data);
+        let start1 = result.data.indexOf('class="audio_list');
+        let end1 = result.data.indexOf('class="Pagination');
+        let string1 = result.data.slice(start1,end1);
+        let array1 = string1.match(/class="artist-name"/g);
+        console.log('array1 length', array1.length);
+        let stringChopped = string1;
+
+        // BUILD LOOP TO HOLD DATA FROM EACH SONG
+        let k = 2;
+        for (var i = 0; i < array1.length; i++) {
+          let selectedObj = {};
+          //get Artist Name
+          let startArtist = stringChopped.indexOf('class="artist-name') + 20;
+          let endArtist = stringChopped.indexOf('class="song-name') - 11;
+          let preArtist = stringChopped.slice(startArtist,endArtist);
+            //regex to get and switch & sign
+          let artist = preArtist.replace(/&amp;/g, "&").replace(/&#038;/g, "&").replace(/&#8217;/g, "'").replace(/&#8216;/g, "‘");
+
+          //get Song Title
+          let startSong = stringChopped.indexOf('class="song-name') + 26;
+          let endSong = stringChopped.indexOf('class="rating-audio') - 26;
+          let preSong = stringChopped.slice(startSong,endSong); 
+            //filter out exclusive div content to fix end slice point
+          if(preSong.includes('class="audio-hmc') === true){
+            let preSongEnd = preSong.indexOf('class="audio-hmc') - 26;
+            preSong = preSong.slice(0,preSongEnd);
+          }
+            //regex to get and switch & sign
+          let song = preSong.replace(/&amp;/g, "&").replace(/&#038;/g, "&").replace(/&#8217;/g, "'").replace(/&#8216;/g, "‘");
+
+          //get Release Date
+          let startRDate = stringChopped.indexOf('class="add-date') + 49;
+          let endRDate = stringChopped.indexOf('class="download-version') - 29;
+          let releaseDate = stringChopped.slice(startRDate,endRDate);
+          //get Buy Link
+          let startBuyLink = stringChopped.indexOf('data-audio_file=') + 17;
+          let endBuyLink = stringChopped.indexOf('</div></li>') - 2;
+          let buyLink = stringChopped.slice(startBuyLink,endBuyLink);
+
+          // CHOP stringChopped AFTER SONG
+          let chopStrStart = stringChopped.indexOf(`src="https://headlinermusicclub.com/blank.mp3?_=${k}"`);
+          stringChopped = stringChopped.slice(chopStrStart);
+          
+          //build song obj
+          selectedObj.artistName = artist;
+          selectedObj.trackCensoredName = song;
+          selectedObj.trackLength = "not availible";
+          selectedObj.releaseDate = releaseDate;
+          selectedObj.trackViewUrl = buyLink;
+          selectedObj.database = "Headliner Music Club";
+
+          headlinerMCArray.push(selectedObj);
+          k++;  
+        }
+        console.log('headlinerMCArray',headlinerMCArray);
+        this.songArrayFunct(headlinerMCArray);
+        resolve();
+      });
+    });
+  };  //End Function searchHeadlinerMusicClub
   
 });

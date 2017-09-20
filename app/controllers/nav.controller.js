@@ -22,10 +22,12 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
               $location.url("/search");
             });
             break;
-          case "BPMSupreme":
+          case "HeadlinerMusicClub":
             //search BPMSupreme
-            console.log('search BPM Supreme', searchInput);
-            
+            apiSearchService.searchHeadlinerMusicClub(searchInput)
+            .then(()=>{
+              $location.url("/search");
+            });
             break;
           case "Beatport":
             //search Beatport
