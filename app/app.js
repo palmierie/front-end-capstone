@@ -1,6 +1,6 @@
 "use strict";
 
-const app = angular.module("SongSearchApp", ["ngRoute", "ngMaterial"]);
+const app = angular.module("SongSearchApp", ["ngRoute", "ngMaterial", "ui.bootstrap"]);
 
 let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
   console.log("userFactory is", userFactory);
@@ -27,7 +27,8 @@ app.config(($routeProvider) => {
 	})
 	.when('/search', {
 		templateUrl:'partials/search-results.html',
-		controller: 'searchCtrl'
+		controller: 'searchCtrl',
+		resolve: {isAuth}
 	})
 	.when('/login', {
 		templateUrl: 'partials/user.html',

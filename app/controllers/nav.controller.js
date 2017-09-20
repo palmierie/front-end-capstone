@@ -1,6 +1,6 @@
 "use strict";
 // having $window injected forces reload of page
-app.controller("navCtrl", function ($scope, $window, $location, userFactory, apiSearchService, dbTglFactory) {
+app.controller("navCtrl", function ($scope, $uibModal, $window, $location, userFactory, apiSearchService, dbTglFactory) {
 
   $scope.isLoggedIn = false;
   let searchInput = $scope.searchInput;
@@ -42,25 +42,32 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
       });
 
   };
+  //clear search input when clicked on
+  $scope.clear = function(){
+    $scope.searchInput = '';
+  };
 
   $scope.searchFunct = function(keyEvent){
     if(keyEvent.which === 13){
+      //authenticate user or else getCurrentUser is null
       userFactory.isAuthenticated()
       .then((x)=>{
         user = userFactory.getCurrentUser();
-      });
-      //get db Toggle Info
-      console.log('user', user);
-      
-      dbTglFactory.getDBTgl(user)
-      .then((data)=>{
-        console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
-        let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
-        console.log('dbTglinfo', dbTglinfo);
-        // get search input
-        searchInput = $scope.searchInput;
-        // perform Search passing Search input and db toggle info
-        searchDBs(dbTglinfo, searchInput);
+        //get db Toggle Info
+        if(user !== null){  
+          dbTglFactory.getDBTgl(user)
+          .then((data)=>{
+            console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
+            let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
+            console.log('dbTglinfo', dbTglinfo);
+            // get search input
+            searchInput = $scope.searchInput;
+            // perform Search passing Search input and db toggle info
+            searchDBs(dbTglinfo, searchInput);
+          });
+        } else{          
+          // loginAlrtCtrl
+        }
       });
     } 
   };
@@ -85,5 +92,51 @@ app.controller("navCtrl", function ($scope, $window, $location, userFactory, api
       // console.log("user logged in?", $scope.isLoggedIn);
     }
   });	
+
+  // function DialogDemoCtrl($scope, $modal){
+    
+      $scope.data = {
+        boldTextTitle: "You must Sign In to use this feature",
+        mode : 'warning'
+      };
+    
+      $scope.open = function () {
+        console.log('OPEN CLICKED!');
+        
+        // $scope.data.mode = mode;
+    
+        var modalInstance = $uibModal.open({
+          templateUrl: '../partials/login-alert.html',
+          // controller: navCtrl,
+          backdrop: true,
+          keyboard: true,
+          backdropClick: true,
+          size: 'lg',
+          resolve: {
+            data: function () {
+              return $scope.data;
+            }
+          }
+        });
+    
+    
+        // modalInstance.result.then(function (selectedItem) {
+        //   $scope.selected = selectedItem;
+        //     //alert( $scope.selected);
+        // }, function () {
+        //   $log.info('Modal dismissed at: ' + new Date());
+        // });
+    
+      };
+    
+    // }
+    
+    
+    var ModalInstanceCtrl = function ($scope, $modalInstance, data) {
+      $scope.data = data;
+      $scope.close = function(/*result*/){
+        $modalInstance.close($scope.data);
+      };
+    };
 
 });

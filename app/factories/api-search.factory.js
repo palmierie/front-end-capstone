@@ -248,8 +248,9 @@ app.service("apiSearchService",function($q, $http, $location){
         let headlinerMCArray = [];
         // console.log('data', result.data);
         let start1 = result.data.indexOf('class="audio_list');
-        let end1 = result.data.indexOf('class="Pagination');
-        let string1 = result.data.slice(start1,end1);
+        let end1 = result.data.indexOf('class="search-res');
+        let string1 = result.data.slice(start1,end1); 
+        //count number of songs to be iterated through
         let array1 = string1.match(/class="artist-name"/g);
         console.log('array1 length', array1.length);
         let stringChopped = string1;
@@ -293,7 +294,7 @@ app.service("apiSearchService",function($q, $http, $location){
           //build song obj
           selectedObj.artistName = artist;
           selectedObj.trackCensoredName = song;
-          selectedObj.trackLength = "not availible";
+          selectedObj.trackLength = "not listed";
           selectedObj.releaseDate = releaseDate;
           selectedObj.trackViewUrl = buyLink;
           selectedObj.database = "Headliner Music Club";
