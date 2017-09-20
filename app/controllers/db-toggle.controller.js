@@ -13,7 +13,7 @@ app.controller("dbTglCtrl", function($scope, userFactory, dbTglFactory){
       $scope.data = {
         dbiTunes: userObj.toggleSettings.iTunes,
         dbBeatport: userObj.toggleSettings.Beatport,
-        dbBPMSupreme: userObj.toggleSettings.BPMSupreme
+        dbDJCity: userObj.toggleSettings.DJCity
       };
       
       changedUserObj = userObj;
@@ -32,7 +32,7 @@ app.controller("dbTglCtrl", function($scope, userFactory, dbTglFactory){
                 toggleSettings: {
                         iTunes: $scope.data.dbiTunes,
                         Beatport: $scope.data.dbBeatport,
-                        BPMSupreme: $scope.data.dbBPMSupreme
+                        DJCity: $scope.data.dbDJCity
                       }
     };
    // console.log('changeUserObj switch', changedUserObj);
