@@ -30,7 +30,7 @@ app.controller("searchCtrl", function($scope, apiSearchService, myListFactory, u
       myListFactory.patchMyList(userObj.id, patchObj);
     });
   }
-
+  //sort List
   $scope.sort = function(keyname){
     $scope.sortKey = keyname;  //set the sortKey to parameter passed in
     $scope.reverse = !$scope.reverse;  //toggle true or false

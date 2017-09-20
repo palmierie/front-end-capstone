@@ -15,7 +15,7 @@
       <th>Save</th>
     </thead>
     <tbody>
-      <tr class="song-object" ng-repeat="songObj in apiSearchService.arraySongObjFinal|orderBy:sortKey:reverse">
+      <tr class="song-object" ng-repeat="songObj in apiSearchService.arraySongObjFinal | orderBy:sortKey:reverse">
         <td class="artist-name">{{songObj.artistName}}</td>
         <td class="track-name">{{songObj.trackCensoredName}}</td>
         <td class="track-length">{{songObj.trackLength}}</td>
