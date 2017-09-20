@@ -281,7 +281,12 @@ app.service("apiSearchService",function($q, $http, $location){
           //get Release Date
           let startRDate = stringChopped.indexOf('class="add-date') + 49;
           let endRDate = stringChopped.indexOf('class="download-version') - 29;
-          let releaseDate = stringChopped.slice(startRDate,endRDate);
+          let releaseDateUnordered = stringChopped.slice(startRDate,endRDate);
+          //format date to match other databases
+          let month = releaseDateUnordered.slice(0,2);
+          let day = releaseDateUnordered.slice(3,5);
+          let year = releaseDateUnordered.slice(6);
+          let releaseDate = `${year}-${month}-${day}`;
           //get Buy Link
           let startBuyLink = stringChopped.indexOf('data-audio_file=') + 17;
           let endBuyLink = stringChopped.indexOf('</div></li>') - 2;
@@ -297,7 +302,7 @@ app.service("apiSearchService",function($q, $http, $location){
           selectedObj.trackLength = "not listed";
           selectedObj.releaseDate = releaseDate;
           selectedObj.trackViewUrl = buyLink;
-          selectedObj.database = "Headliner Music Club";
+          selectedObj.database = "H. M. C.";
 
           headlinerMCArray.push(selectedObj);
           k++;  
