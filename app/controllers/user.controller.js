@@ -127,7 +127,7 @@ app.controller("userCtrl", function ($scope, $window, userFactory, $location, db
 													toggleSettings: {
 																iTunes: true,
 																Beatport: true,
-																DJCity: true
+																HeadlinerMusicClub: true
 													}
 						};
 				
@@ -142,7 +142,7 @@ app.controller("userCtrl", function ($scope, $window, userFactory, $location, db
 													toggleSettings: {
 																iTunes: true,
 																Beatport: true,
-																DJCity: true
+																HeadlinerMusicClub: true
 													}																	
 						};
 				

@@ -241,9 +241,9 @@ app.service("apiSearchService",function($q, $http, $location){
     });
   } // End function searchBeatportArtists
 
-  this.searchDJCity = function(search){  //headliner music club -- CHANGE
+  this.searchHeadlinerMusicClub = function(search){
     return $q((resolve, reject)=>{
-      $http.get(`https://headlinermusicclub.com/?s=tiesto&post_type=audio`)
+      $http.get(`https://headlinermusicclub.com/?s=${search}&post_type=audio`)
       .then((result)=>{
         let headlinerMCArray = [];
         // console.log('data', result.data);
@@ -302,10 +302,10 @@ app.service("apiSearchService",function($q, $http, $location){
           k++;  
         }
         console.log('headlinerMCArray',headlinerMCArray);
-          
-        
+        this.songArrayFunct(headlinerMCArray);
+        resolve();
       });
     });
-  };
+  };  //End Function searchHeadlinerMusicClub
   
 });
