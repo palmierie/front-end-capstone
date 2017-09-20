@@ -46,6 +46,10 @@ app.controller("navCtrl", function ($scope, $uibModal, $window, $location, userF
   $scope.clear = function(){
     $scope.searchInput = '';
   };
+  //force users to sign in if they click My List or Settings
+  $scope.alert = function(){
+    $window.alert("You need to Log in to use this feature");
+  };
 
   $scope.searchFunct = function(keyEvent){
     if(keyEvent.which === 13){
@@ -66,6 +70,7 @@ app.controller("navCtrl", function ($scope, $uibModal, $window, $location, userF
             searchDBs(dbTglinfo, searchInput);
           });
         } else{          
+          $window.alert("You need to Log in to use this feature");
           // loginAlrtCtrl
         }
       });
@@ -93,50 +98,50 @@ app.controller("navCtrl", function ($scope, $uibModal, $window, $location, userF
     }
   });	
 
-  // function DialogDemoCtrl($scope, $modal){
+  // function Dialog  DemoCtrl($scope, $modal){
     
-      $scope.data = {
-        boldTextTitle: "You must Sign In to use this feature",
-        mode : 'warning'
-      };
+    //   $scope.data = {
+    //     boldTextTitle: "You must Sign In to use this feature",
+    //     mode : 'warning'
+    //   };
     
-      $scope.open = function () {
-        console.log('OPEN CLICKED!');
+    //   $scope.open = function () {
+    //     console.log('OPEN CLICKED!');
         
-        // $scope.data.mode = mode;
+    //     // $scope.data.mode = mode;
     
-        var modalInstance = $uibModal.open({
-          templateUrl: '../partials/login-alert.html',
-          // controller: navCtrl,
-          backdrop: true,
-          keyboard: true,
-          backdropClick: true,
-          size: 'lg',
-          resolve: {
-            data: function () {
-              return $scope.data;
-            }
-          }
-        });
-    
-    
-        // modalInstance.result.then(function (selectedItem) {
-        //   $scope.selected = selectedItem;
-        //     //alert( $scope.selected);
-        // }, function () {
-        //   $log.info('Modal dismissed at: ' + new Date());
-        // });
-    
-      };
-    
-    // }
+    //     var modalInstance = $uibModal.open({
+    //       templateUrl: '../partials/login-alert.html',
+    //       // controller: navCtrl,
+    //       backdrop: true,
+    //       keyboard: true,
+    //       backdropClick: true,
+    //       size: 'lg',
+    //       resolve: {
+    //         data: function () {
+    //           return $scope.data;
+    //         }
+    //       }
+    //     });
     
     
-    var ModalInstanceCtrl = function ($scope, $modalInstance, data) {
-      $scope.data = data;
-      $scope.close = function(/*result*/){
-        $modalInstance.close($scope.data);
-      };
-    };
+    //     // modalInstance.result.then(function (selectedItem) {
+    //     //   $scope.selected = selectedItem;
+    //     //     //alert( $scope.selected);
+    //     // }, function () {
+    //     //   $log.info('Modal dismissed at: ' + new Date());
+    //     // });
+    
+    //   };
+    
+    // // }
+    
+    
+    // var ModalInstanceCtrl = function ($scope, $modalInstance, data) {
+    //   $scope.data = data;
+    //   $scope.close = function(/*result*/){
+    //     $modalInstance.close($scope.data);
+    //   };
+    // };
 
 });

@@ -282,6 +282,7 @@ app.service("apiSearchService",function($q, $http, $location){
           let startRDate = stringChopped.indexOf('class="add-date') + 49;
           let endRDate = stringChopped.indexOf('class="download-version') - 29;
           let releaseDateUnordered = stringChopped.slice(startRDate,endRDate);
+          //format date to match other databases
           let month = releaseDateUnordered.slice(0,2);
           let day = releaseDateUnordered.slice(3,5);
           let year = releaseDateUnordered.slice(6);

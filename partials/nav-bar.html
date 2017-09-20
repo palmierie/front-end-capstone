@@ -9,18 +9,24 @@
           <input class="form-control mr-2" size="60" type="text" autofocus="true" placeholder="Search" aria-label="Search" ng-keypress="searchFunct($event)" ng-focus="clear()" ng-model="searchInput">
         </form>
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" ng-click="open()" ng-href="#">BUTTON!</a>
-              </li>
-          <li class="nav-item">
-            <a class="nav-link" ng-href="#!/my-list">My List</a>
+              </li> -->
+          <li class="nav-item" ng-show="!isLoggedIn">
+            <a class="nav-link" ng-click="alert()">My List</a>
+          </li>
+          <li class="nav-item" ng-show="isLoggedIn">
+              <a class="nav-link" ng-href="#!/my-list">My List</a>
           </li>
           <li class="nav-item"  ng-show="!isLoggedIn">
             <a class="nav-link" href="" ng-click="login()">Login</a></li>
           <li class="nav-item" ng-show="isLoggedIn">
             <a class="nav-link" href="" ng-click="logout()" >Logout</a></li> 
-          <li class="nav-item">
-            <a class="nav-link" ng-href="#!/settings">Settings</a>
+          <li class="nav-item" ng-show="!isLoggedIn">
+            <a class="nav-link" ng-click="alert()">Settings</a>
+          </li>
+          <li class="nav-item" ng-show="isLoggedIn">
+              <a class="nav-link" ng-href="#!/settings">Settings</a>
           </li>
         </ul>
         
