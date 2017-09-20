@@ -2,16 +2,20 @@
 <div class="row results-width">
   <table class="table table-sm table-striped table-hover">
     <thead>
-      <th>Artist</th>
-      <th>Track</th>
+      <th ng-click="sort('artistName')">Artist<i class="fa fa-sort" ng-show="sortKey=='artistName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+      </th>
+      <th ng-click="sort('trackCensoredName')">Track<i class="fa fa-sort" ng-show="sortKey=='trackCensoredName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+      </th>
       <th>Length</th>
-      <th>Release Date</th>
-      <th>Database</th>
+      <th ng-click="sort('releaseDate')">Release Date<i class="fa fa-sort" ng-show="sortKey=='releaseDate'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+      </th>
+      <th ng-click="sort('database')"> Database<i class="fa fa-sort" ng-show="sortKey=='database'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+      </th>
       <th>Buy/DL</th>
       <th>Save</th>
     </thead>
     <tbody>
-      <tr class="song-object" ng-repeat="songObj in apiSearchService.arraySongObjFinal">
+      <tr class="song-object" ng-repeat="songObj in apiSearchService.arraySongObjFinal|orderBy:sortKey:reverse">
         <td class="artist-name">{{songObj.artistName}}</td>
         <td class="track-name">{{songObj.trackCensoredName}}</td>
         <td class="track-length">{{songObj.trackLength}}</td>
