@@ -3,11 +3,23 @@
 
 app.controller("homeCtrl", function($scope, userFactory, filterFactory){
 
-  
-    // $rootScope.showSearch = true;
-    // $scope.searchText = filterFactory;  
+  $scope.isLoggedIn = false;
 
-   
+  let user = '';
+  //authenticate user or else getCurrentUser is null
+  userFactory.isAuthenticated()
+  .then((x)=>{
+    user = userFactory.getCurrentUser();
+  });
+  
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      $scope.isLoggedIn = true;
+      $scope.$apply();
+    } else {
+      $scope.isLoggedIn = false;
+    }
+  });
 
 
 });
