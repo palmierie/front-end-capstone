@@ -17,7 +17,7 @@ app.controller("navCtrl", function ($scope, $uibModal, $window, $location, userF
         switch (db){
           case "iTunes":
             //search iTunes
-            apiSearchService.searchiTunes(searchInput)
+             apiSearchService.searchiTunes(searchInput)
             .then(()=>{
               $location.url("/search");
             });
@@ -83,20 +83,19 @@ app.controller("navCtrl", function ($scope, $uibModal, $window, $location, userF
 	$scope.logout = () => {
         userFactory.logOut();
       };
-  // $scope.myList = ()=>{
-  //   $location.url("/my-list");
-  // };
+  
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       $scope.isLoggedIn = true;
-      // console.log("currentUser logged in?", user);
-      // console.log("logged in t-f", $scope.isLoggedIn );
       $scope.$apply();
     } else {
       $scope.isLoggedIn = false;
-      // console.log("user logged in?", $scope.isLoggedIn);
     }
-  });	
+  });
+
+  // $scope.myList = ()=>{
+  //   $location.url("/my-list");
+  // };
 
   // function Dialog  DemoCtrl($scope, $modal){
     

@@ -12,7 +12,7 @@
       Email: <input type="text" autofocus="true" ng-model="account.email">
     </div>
     <div>
-      Password: <input type="password" ng-model="account.password">
+      Password: <input type="password" ng-keypress="loginEnter($event)" ng-model="account.password">
     </div>
     <div>
       <button ng-click="login()" class="btn btn-info">Login</button>
@@ -31,7 +31,7 @@
       Email: <input type="text" autofocus="true" ng-model="newAccount.email">
     </div>
     <div>
-      Password: <input type="password" ng-model="newAccount.password">
+      Password: <input type="password" ng-keypress="registerEnter($event)" ng-model="newAccount.password">
     </div>
     <div>
       <button ng-click="register()" class="btn btn-default">Register</button>
