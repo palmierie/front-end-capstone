@@ -14,19 +14,16 @@ function makeSongID(){
 
 function patchMyList(id, patchObj){
   return $q((resolve, reject)=>{
-    let stringifiedObj = JSON.stringify(patchObj);
-    console.log('stringifiedObj', stringifiedObj);
-    
-    $http.patch(`${FBCreds.databaseURL}/users/${id}.json`, stringifiedObj)
+    $http.patch(`${FBCreds.databaseURL}/users/${id}.json`, patchObj)
     .then((data)=>{
       resolve();
     });
    });
 }
 
-function deleteSongID(patchArr){
+function deleteSongID(patchSongIDobj){
   return $q((resolve, reject)=>{
-    $http.patch(`${FBCreds.databaseURL}/songID.json`, patchArr)
+    $http.patch(`${FBCreds.databaseURL}/songID.json`, patchSongIDobj)
     .then(()=>{
       resolve();
     });
