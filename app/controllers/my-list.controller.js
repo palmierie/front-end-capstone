@@ -18,14 +18,21 @@ app.controller("myListCtrl", function($scope, $window, myListFactory, userFactor
       $scope.arraySongObj = userObj.myList;
       
       $scope.deleteFunction = function(event){
+        //get song ID
         let songID = event.currentTarget.parentElement.parentElement.getAttribute("user-song-id");
-        let updatedSongArr = userObj.myList.filter(song=> songID !== song.id);
-        patchObj.myList = updatedSongArr;
+        //remove songObj with matching ID
+        let updatedSongObjArr = userObj.myList.filter(song=> songID !== song.id);
+        patchObj.myList = updatedSongObjArr;
+        // submit new UserObj with new song list
         myListFactory.patchMyList(userObj.id, patchObj)
         .then(()=>{
-          $window.location.reload();
+          // submit songID to be deleted
+          myListFactory.deleteSongID(songID)
+          .then(()=>{
+           $window.location.reload();
+          });
         });
-      };
+      };  //End delete function
     });
   }
   

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 app.service("apiSearchService",function($q, $http, $location){
 
@@ -119,6 +119,9 @@ app.service("apiSearchService",function($q, $http, $location){
     });
   } // End function searchiTunesArtists
 
+  // Search for songs within Beatport
+  // search (String): The search query
+  // returns: Promise
   function searchBeatportSongs(search){
     return $q((resolve, reject)=>{
   
@@ -305,7 +308,7 @@ app.service("apiSearchService",function($q, $http, $location){
           selectedObj.database = "H. M. C.";
 
           headlinerMCArray.push(selectedObj);
-          k++;  
+          k++;
         }
         console.log('headlinerMCArray',headlinerMCArray);
         this.songArrayFunct(headlinerMCArray);
