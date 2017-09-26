@@ -21,14 +21,23 @@ function patchMyList(id, patchObj){
    });
 }
 
-function deleteSongID(patchSongIDobj){
+function deleteSongID(id){
   return $q((resolve, reject)=>{
-    $http.patch(`${FBCreds.databaseURL}/songID.json`, patchSongIDobj)
+    $http.delete(`${FBCreds.databaseURL}/songID/${id}.json`)
     .then(()=>{
       resolve();
     });
   });
 }
+
+// function deleteSongID(patchSongIDobj){
+//   return $q((resolve, reject)=>{
+//     $http.patch(`${FBCreds.databaseURL}/songID.json`, patchSongIDobj)
+//     .then(()=>{
+//       resolve();
+//     });
+//   });
+// }
 
   return {patchMyList, makeSongID, deleteSongID};
 });
