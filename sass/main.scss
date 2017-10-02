@@ -1,3 +1,15 @@
+// PRIMARY DARK COLOR
+$primary-dark-color: #312C3D;
+// PRIMARY LIGHT COLOR
+$primary-light-color:#4b4656;
+// PRIMARY LIGHTER COLOR
+$primary-lighter-color:#5a5565;
+// SECONDARY COLOR
+$secondary-color: #DADBC6 ;
+body{
+  background-color: $primary-dark-color;
+  color: $secondary-color;
+}
 .row{
   margin-right: 1rem;
   margin-left: 1rem;
@@ -6,11 +18,49 @@
   padding-left: 0;
   padding-right: 0;
 }
+.custom-site-body{
+  background-color: $primary-dark-color;
+}
+.custom-navbar{
+  height: 4em;
+  background-color: $primary-light-color;
+}
+.custom-navbar a{
+  color: $secondary-color;
+}
+.custom-search{
+  line-height: 2;
+  background-color: $primary-dark-color;
+  color: $secondary-color;
+}
+.custom-search:focus{
+  background-color: $primary-lighter-color;
+  color: $secondary-color;
+  border-color: $secondary-color;
+}
+// Progress Bar
+md-progress-linear.md-default-theme .md-container, md-progress-linear .md-container {
+  background-color: $primary-lighter-color;
+}
+md-progress-linear.md-default-theme .md-bar, md-progress-linear .md-bar{
+  background-color: $secondary-color;
+}
+//Search Results
 .results-width{
   width: 90%;
   margin: 0 auto;
 }
-
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0,0,0,.25);
+}
 td{
   font-size: .8em;
+}
+td a{
+  color: $secondary-color;
+}
+td a:hover{
+  color: $secondary-color;
+  border: 1px solid $secondary-color;
+  padding: 2px;
 }

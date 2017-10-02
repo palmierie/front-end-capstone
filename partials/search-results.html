@@ -1,29 +1,32 @@
-<div class="row"> <h2>Search Result</h2></div>
-<div class="row results-width">
-  <table class="table table-sm table-striped table-hover">
-    <thead>
-      <th ng-click="sort('artistName')">Artist<i class="fa fa-sort" ng-show="sortKey=='artistName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-      </th>
-      <th ng-click="sort('trackCensoredName')">Track<i class="fa fa-sort" ng-show="sortKey=='trackCensoredName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-      </th>
-      <th>Length</th>
-      <th ng-click="sort('releaseDate')">Release Date<i class="fa fa-sort" ng-show="sortKey=='releaseDate'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-      </th>
-      <th ng-click="sort('database')"> Database<i class="fa fa-sort" ng-show="sortKey=='database'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-      </th>
-      <th>Buy/DL</th>
-      <th>Save</th>
-    </thead>
-    <tbody>
-      <tr class="song-object" ng-repeat="songObj in apiSearchService.arraySongObjFinal | orderBy:sortKey:reverse">
-        <td class="artist-name">{{songObj.artistName}}</td>
-        <td class="track-name">{{songObj.trackCensoredName}}</td>
-        <td class="track-length">{{songObj.trackLength}}</td>
-        <td class="release-date">{{songObj.releaseDate}}</td>
-        <td class="song-database">{{songObj.database}}</td>
-        <td class="buy-url"><a ng-href="{{songObj.trackViewUrl}}" target="_blank">Buy</a></td>
-        <td><a href="#!/search" ng-click="saveFunction($event)">Save</a></td>
-      </tr>
-    </tbody>
-  </table>
+<div ng-show="!resultsDone"><md-progress-linear md-mode="indeterminate"></md-progress-linear></div>
+<div ng-show="resultsDone">
+  <div class="row"> <h2>Search Result</h2></div>
+  <div class="row results-width">
+    <table class="table table-sm table-striped table-hover">
+      <thead>
+        <th ng-click="sort('artistName')">Artist<i class="fa fa-sort" ng-show="sortKey=='artistName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+        </th>
+        <th ng-click="sort('trackCensoredName')">Track<i class="fa fa-sort" ng-show="sortKey=='trackCensoredName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+        </th>
+        <th>Length</th>
+        <th ng-click="sort('releaseDate')">Release Date<i class="fa fa-sort" ng-show="sortKey=='releaseDate'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+        </th>
+        <th ng-click="sort('database')"> Database<i class="fa fa-sort" ng-show="sortKey=='database'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+        </th>
+        <th>Buy/DL</th>
+        <th>Save</th>
+      </thead>
+      <tbody>
+        <tr class="song-object" ng-repeat="songObj in apiSearchService.arraySongObjFinal | orderBy:sortKey:reverse">
+          <td class="artist-name">{{songObj.artistName}}</td>
+          <td class="track-name">{{songObj.trackCensoredName}}</td>
+          <td class="track-length">{{songObj.trackLength}}</td>
+          <td class="release-date">{{songObj.releaseDate}}</td>
+          <td class="song-database">{{songObj.database}}</td>
+          <td class="buy-url"><a ng-href="{{songObj.trackViewUrl}}" target="_blank">Buy</a></td>
+          <td><a href="#!/search" ng-click="saveFunction($event)">Save</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

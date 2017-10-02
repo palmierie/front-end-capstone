@@ -1,12 +1,9 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark" ng-controller="navCtrl">
+<nav class="navbar navbar-expand-md custom-navbar" ng-controller="navCtrl">
   <a class="navbar-brand site-title" href="#!/">SongSearch</a>
-  <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <form class="form-inline mt-2 mt-md-0">
-      <input class="form-control mr-2" size="60" type="text" autofocus="true" placeholder="Search" aria-label="Search" ng-keypress="searchFunct($event)" ng-focus="clear()" ng-model="searchInput">
+      <input class="form-control mr-2 custom-search" size="60" type="text" autofocus="true" placeholder="Search" aria-label="Search" ng-keypress="searchFunct($event)" ng-focus="clear()" ng-model="searchInput">
     </form>
     <ul class="navbar-nav ml-auto">
         <!-- <li class="nav-item">

@@ -9,7 +9,14 @@ app.controller("searchCtrl", function($scope, apiSearchService, myListFactory, u
     user = userFactory.getCurrentUser();
   });
 
+
   $scope.apiSearchService = apiSearchService;
+
+  
+  $scope.resultsDone = apiSearchService.resultsDone;
+  console.log('apiSearchService.resultsLoaded()', apiSearchService.resultsDone);
+  
+  apiSearchService.initResultsDone();
 
   function buildPatchObject(savedObj){
     // let patchObj = {};
