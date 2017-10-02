@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("myListCtrl", function($scope, $window, myListFactory, userFactory){
+app.controller("myListCtrl", function($scope, $route, myListFactory, userFactory){
   let user = '';
   //authenticate user or else getCurrentUser is null
   userFactory.isAuthenticated()
@@ -29,7 +29,7 @@ app.controller("myListCtrl", function($scope, $window, myListFactory, userFactor
           // submit songID to be deleted
           myListFactory.deleteSongID(songID)
           .then(()=>{
-           $window.location.reload();
+            $route.reload();
           });
         });
       };  //End delete function

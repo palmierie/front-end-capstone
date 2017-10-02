@@ -6,6 +6,28 @@ app.service("apiSearchService",function($q, $http, $location){
   //collects all arrays from all functions
   let tempArray = [];
 
+  //Toggle to true when to display results
+  this.resultsDone = false;
+  
+  //resolves that happened
+  let numberOfResolves = 0;
+  
+  //number of calls
+  let numberOfCalls = null;
+  
+  //number of Calls to be made
+  this.numberOfCalls = function(number){
+    numberOfCalls = number;
+  };
+  
+  this.initResultsDone = function(){
+    this.resultsDone = false;
+  };
+  // this.resultsLoaded = function(){
+  //   console.log('resultsDone in this.resultsLoaded', this.resultsDone);
+  //   return this.resultsDone;
+  // };
+
   //combines iTunes Search for Artist and Track Title
   this.searchiTunes = function(searchInput){
     return $q((resolve, reject)=>{
@@ -15,6 +37,8 @@ app.service("apiSearchService",function($q, $http, $location){
       Promise.all([p1,p2])
       .then((arraySongObj)=>{
         let flattenedArray = [].concat.apply([],arraySongObj);
+        ++numberOfResolves;
+        console.log('numberOfResolves iTUnes', numberOfResolves);
         this.songArrayFunct(flattenedArray);
         resolve();
       });
@@ -30,17 +54,28 @@ app.service("apiSearchService",function($q, $http, $location){
       Promise.all([p1,p2])
         .then((arraySongObj)=>{
           let flattenedArray = [].concat.apply([],arraySongObj);
+          ++numberOfResolves;
+          console.log('numberOfResolves BP', numberOfResolves);
           this.songArrayFunct(flattenedArray);
+          // resultsDone = true;
+          // this.resultsLoaded();
           resolve();
         });
-    });
-  };
+      });
+    };
   //combines results from all arrays
   this.songArrayFunct = function(arraySongObj){
     tempArray.push(arraySongObj);
     this.arraySongObjFinal = [].concat.apply([],tempArray);
     console.log('tempArray', tempArray);
     console.log('this.arraySongObjFinal', this.arraySongObjFinal);
+    //areResultsDone();
+    this.resultsDone = numberOfCalls===numberOfResolves ? true : false;
+    if (this.resultsDone === true){
+      // this.resultsLoaded();
+      numberOfResolves = 0;
+    }
+    console.log('results done in api Service', this.resultsDone);
     return this.arraySongObjFinal;
   };
   
@@ -48,6 +83,21 @@ app.service("apiSearchService",function($q, $http, $location){
     tempArray = [];
   };
 
+  // function areResultsDone(){
+  //   console.log('numberOfCalls', numberOfCalls, 'numberOfResolves', numberOfResolves);
+  //   if (numberOfCalls === numberOfResolves){
+  //     resultsDone = true;
+  //   } else {
+  //     resultsDone = false;
+  //   }
+  //   return resultsDone;
+  // }
+/****** */
+
+  // this.initResultsDone = function(){
+  //   this.resultsDone = false;
+  //   return this.resultsDone;
+  // };
 
   // convert times for iTunes return data
   function convertTrackTimeMilliseconds(trackInMilliseconds) {
@@ -311,6 +361,7 @@ app.service("apiSearchService",function($q, $http, $location){
           k++;
         }
         console.log('headlinerMCArray',headlinerMCArray);
+        ++numberOfResolves;
         this.songArrayFunct(headlinerMCArray);
         resolve();
       });
