@@ -1,40 +1,42 @@
-<div class="row">
-  <div class="col-xs-6">
-    <h4>Login with Google</h4>
-    <button ng-click="loginGoogle()" class="btn btn-info">Sign In</button>
+<div class="row center-custom">
+  <div class="row">
+    <div class="col-xs-6">
+      <h4>Login with Google</h4>
+      <button ng-click="loginGoogle()" class="btn btn-info">Sign In</button>
+    </div>
   </div>
-</div>
+      <hr>
+  <div class="row">
+    <div class="col-xs-6">
+      <h4>Login with Email</h4>
+      <div>
+        Email: <input type="text" autofocus="true" ng-model="account.email">
+      </div>
+      <div>
+        Password: <input type="password" ng-keypress="loginEnter($event)" ng-model="account.password">
+      </div>
+      <div>
+        <button ng-click="login()" class="btn btn-info">Login</button>
+      </div>
+    </div>
+  </div>
+    <br>
     <hr>
-<div class="row">
-  <div class="col-xs-6">
-    <h4>Login with Email</h4>
-    <div>
-      Email: <input type="text" autofocus="true" ng-model="account.email">
-    </div>
-    <div>
-      Password: <input type="password" ng-keypress="loginEnter($event)" ng-model="account.password">
-    </div>
-    <div>
-      <button ng-click="login()" class="btn btn-info">Login</button>
-    </div>
-  </div>
-</div>
-  <br>
-  <hr>
-<div class="row">
-  <div class="col-xs-6">
-    <h4> New User? Register!</h4>
-    <div>
-      Name: <input type="text" ng-model="displayName">
-    </div>
-    <div>
-      Email: <input type="text" autofocus="true" ng-model="newAccount.email">
-    </div>
-    <div>
-      Password: <input type="password" ng-keypress="registerEnter($event)" ng-model="newAccount.password">
-    </div>
-    <div>
-      <button ng-click="register()" class="btn btn-default">Register</button>
+  <div class="row">
+    <div class="col-xs-6">
+      <h4> New User? Register!</h4>
+      <div>
+        Name: <input type="text" ng-model="displayName">
+      </div>
+      <div>
+        Email: <input type="text" autofocus="true" ng-model="newAccount.email">
+      </div>
+      <div>
+        Password: <input type="password" ng-keypress="registerEnter($event)" ng-model="newAccount.password">
+      </div>
+      <div>
+        <button ng-click="register()" class="btn btn-default">Register</button>
+      </div>
     </div>
   </div>
 </div>

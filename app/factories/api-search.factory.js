@@ -23,11 +23,7 @@ app.service("apiSearchService",function($q, $http, $location){
   this.initResultsDone = function(){
     this.resultsDone = false;
   };
-  // this.resultsLoaded = function(){
-  //   console.log('resultsDone in this.resultsLoaded', this.resultsDone);
-  //   return this.resultsDone;
-  // };
-
+ 
   //combines iTunes Search for Artist and Track Title
   this.searchiTunes = function(searchInput){
     return $q((resolve, reject)=>{
@@ -57,8 +53,6 @@ app.service("apiSearchService",function($q, $http, $location){
           ++numberOfResolves;
           console.log('numberOfResolves BP', numberOfResolves);
           this.songArrayFunct(flattenedArray);
-          // resultsDone = true;
-          // this.resultsLoaded();
           resolve();
         });
       });
@@ -69,10 +63,8 @@ app.service("apiSearchService",function($q, $http, $location){
     this.arraySongObjFinal = [].concat.apply([],tempArray);
     console.log('tempArray', tempArray);
     console.log('this.arraySongObjFinal', this.arraySongObjFinal);
-    //areResultsDone();
     this.resultsDone = numberOfCalls===numberOfResolves ? true : false;
     if (this.resultsDone === true){
-      // this.resultsLoaded();
       numberOfResolves = 0;
     }
     console.log('results done in api Service', this.resultsDone);
@@ -82,22 +74,6 @@ app.service("apiSearchService",function($q, $http, $location){
   this.clearTempArray = function(){
     tempArray = [];
   };
-
-  // function areResultsDone(){
-  //   console.log('numberOfCalls', numberOfCalls, 'numberOfResolves', numberOfResolves);
-  //   if (numberOfCalls === numberOfResolves){
-  //     resultsDone = true;
-  //   } else {
-  //     resultsDone = false;
-  //   }
-  //   return resultsDone;
-  // }
-/****** */
-
-  // this.initResultsDone = function(){
-  //   this.resultsDone = false;
-  //   return this.resultsDone;
-  // };
 
   // convert times for iTunes return data
   function convertTrackTimeMilliseconds(trackInMilliseconds) {
