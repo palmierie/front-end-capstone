@@ -38,6 +38,11 @@ body{
   color: $secondary-color;
   border-color: $secondary-color;
 }
+
+.center-search-custom{
+  margin: 0 auto;
+}
+
 // Progress Bar
 md-progress-linear.md-default-theme .md-container, md-progress-linear .md-container {
   background-color: $primary-lighter-color;
