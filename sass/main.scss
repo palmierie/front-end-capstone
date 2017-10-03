@@ -45,7 +45,28 @@ md-progress-linear.md-default-theme .md-container, md-progress-linear .md-contai
 md-progress-linear.md-default-theme .md-bar, md-progress-linear .md-bar{
   background-color: $secondary-color;
 }
-//Search Results
+
+//center header text
+.list-title-custom{
+  display: block;
+  text-align: center;
+  width: 200px;
+  margin: 2em auto;
+}
+
+.text-center-custom{
+  display: block;
+  text-align: center;
+  width: 1000px;
+  margin: 2em auto;
+}
+
+.center-custom{
+  display: block;
+  width: 300px;
+  margin: 2em auto;
+}
+//Search Results My List Results
 .results-width{
   width: 90%;
   margin: 0 auto;
@@ -63,4 +84,27 @@ td a:hover{
   color: $secondary-color;
   border: 1px solid $secondary-color;
   padding: 2px;
+}
+
+//Toggle Switches
+md-switch.md-default-theme.md-checked .md-bar, md-switch.md-checked .md-bar {
+  background-color: $primary-lighter-color;
+}
+
+md-switch.md-default-theme.md-checked .md-thumb, md-switch.md-checked .md-thumb {
+  background-color: $secondary-color;
+}
+md-switch.md-default-theme.md-checked .md-ink-ripple, md-switch.md-checked .md-ink-ripple {
+  color: $secondary-color;
+}
+md-switch.md-default-theme.md-checked .md-ink-ripple, .md-ink-ripple {
+  color: $secondary-color;
+}
+
+.db-toggle-custom{
+  display: block;
+  width: 400px;
+  margin: 10em auto 0 auto;
+  border: 5px solid $secondary-color;
+  padding: 2em;
 }
