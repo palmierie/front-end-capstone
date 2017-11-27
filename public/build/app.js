@@ -142,15 +142,6 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   angular.module("SongSearchApp").controller("homeCtrl", homeCtrl);
 })();
 },{}],4:[function(require,module,exports){
-// "use strict";
-// require('./db-toggle.controller.js');
-// require('./home.controller.js');
-// require('./login-alert.controller.js');
-// require('./my-list.controller.js');
-// require('./nav.controller.js');
-// require('./search.controller.js');
-// require('./user.controller.js');
-},{}],5:[function(require,module,exports){
 (function() {
   "use strict";
 
@@ -205,7 +196,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   loginAlrtCtrl.$inject = ['$scope', '$modal', '$modalInstance'];
   angular.module("SongSearchApp").controller("loginAlrtCtrl", loginAlrtCtrl);
 })();
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function(){
   "use strict";
 
@@ -257,7 +248,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   angular.module("SongSearchApp").controller("myListCtrl", myListCtrl);
   
 })();
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 (function(){
   "use strict";
   // having $window injected forces reload of page
@@ -429,7 +420,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   angular.module("SongSearchApp").controller("navCtrl",  navCtrl);
   
 })();
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function(){  
   "use strict";
 
@@ -504,7 +495,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   angular.module("SongSearchApp").controller("searchCtrl", searchCtrl);
 
 })();
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function(){
 	"use strict";
 
@@ -711,7 +702,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 	angular.module("SongSearchApp").controller("userCtrl", userCtrl);
 
 })();
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function(){
   'use strict';
 
@@ -1065,7 +1056,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   angular.module("SongSearchApp").service("apiSearchService", apiSearchService);
   
 })();
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function(){
   "use strict";
 
@@ -1109,7 +1100,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   angular.module("SongSearchApp").factory("dbTglFactory", dbTglFactory);
 
 })();
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function(){
 	"use strict";
 
@@ -1124,14 +1115,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 	angular.module("SongSearchApp").factory("filterFactory", filterFactory);
 	
 })();
-},{}],13:[function(require,module,exports){
-// "use strict";
-// require('./api-search.factory.js');
-// require('./db-toggle.factory.js');
-// require('./filter.factory.js');
-// require('./my-list.factory.js');
-// require('./user.factory.js');
-},{}],14:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function(){
   "use strict";
 
@@ -1181,7 +1165,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   angular.module("SongSearchApp").factory("myListFactory", myListFactory);
   
 })();
-},{}],15:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function(){
   "use strict";
 
@@ -1367,7 +1351,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
   angular.module("SongSearchApp").factory("userFactory", userFactory);
   
 })();
-},{}],16:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function(){
   "use strict";
 
@@ -1379,7 +1363,4 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 
   angular.module("SongSearchApp").constant("FBCreds", FBCreds);
 })();
-},{}],17:[function(require,module,exports){
-// "use strict";
-// require('./fb-creds.js');
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]);
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14]);
