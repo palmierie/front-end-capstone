@@ -1,5 +1,4 @@
 lib/.sass-cache
 .DS_Store
-dist/
-css/
+css/main.css.map
 lib/node_modules
