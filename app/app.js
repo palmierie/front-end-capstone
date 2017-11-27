@@ -1,6 +1,8 @@
 "use strict";
 
-const app = angular.module("SongSearchApp", ["ngRoute", "ngMaterial", "ui.bootstrap"]);
+// change app. to angular.
+
+angular.module("SongSearchApp", ["ngRoute", "ngMaterial", "ui.bootstrap"]);
 
 let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
   console.log("userFactory is", userFactory);
@@ -19,7 +21,7 @@ let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
 
 
 
-app.config(($routeProvider) => {
+angular.module("SongSearchApp").config(($routeProvider) => {
 	$routeProvider
 	.when('/', {
 		templateUrl:'partials/home.html',
@@ -48,7 +50,7 @@ app.config(($routeProvider) => {
 });
 
 
-app.run(($location, FBCreds) => {
+angular.module("SongSearchApp").run(($location, FBCreds) => {
 	let creds = FBCreds;
 	let authConfig = {
 		apiKey: creds.apiKey,
@@ -58,12 +60,3 @@ app.run(($location, FBCreds) => {
 
 	firebase.initializeApp(authConfig);
 });
-
-
-  
-
-// // example of $rootScope
-// app.run(function($rootScope){
-// 	$rootScope.showSearch = false;
-// });
-

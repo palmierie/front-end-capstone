@@ -1,7 +1,14 @@
-"use strict";
+(function(){
+	"use strict";
 
-app.factory("filterFactory", function(){
-  	return {
-		search: ""
+	var filterFactory = function(){
+			return {
+			search: ""
+		};
 	};
-});
+	
+	// $inject
+
+	angular.module("SongSearchApp").factory("filterFactory", filterFactory);
+	
+})();
