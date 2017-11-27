@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SongSearch</title>
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="./image/favicon.ico" type="image/x-icon"/>
+  <!-- Bootstrap Styles -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  <!-- Font Awesome Icons -->
+  <script src="https://use.fontawesome.com/72504002c4.js"></script>
+  <!-- Angular Material -->
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+  <!-- CSS -->
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body ng-app="SongSearchApp">
+  <div class="container-fluid">
+    <div ng-include="'partials/nav-bar.html'"></div>
+    <div>
+      <div class="custom-site-body" ng-view>Application</div>
+    </div>
+  </div>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/4.3.1/firebase.js"></script>
+  <!-- Jquery & Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <!-- Angular -->
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+  <!-- Angular Route -->
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-route.min.js"></script>
+  <!-- Angular Material Dependencies -->
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-animate.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-aria.min.js"></script>
+  <!-- Angular Material Javascript -->
+  <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+  <!-- Angular Modal - UI-Bootstrap -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+  <!-- Bundlin' -->
+  <script src="./build/app.js"></script>
+</body>
+</html>

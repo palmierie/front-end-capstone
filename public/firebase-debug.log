@@ -1,0 +1,33 @@
+[debug] [2017-11-13T23:37:13.317Z] ----------------------------------------------------------------------
+[debug] [2017-11-13T23:37:13.320Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2017-11-13T23:37:13.320Z] CLI Version:   3.15.0
+[debug] [2017-11-13T23:37:13.320Z] Platform:      darwin
+[debug] [2017-11-13T23:37:13.320Z] Node Version:  v6.11.0
+[debug] [2017-11-13T23:37:13.321Z] Time:          Mon Nov 13 2017 17:37:13 GMT-0600 (CST)
+[debug] [2017-11-13T23:37:13.321Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-11-13T23:37:13.335Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-11-13T23:37:13.335Z] > authorizing via signed-in user
+[debug] [2017-11-13T23:37:13.338Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/songsearch-9506f  
+ Mon Nov 13 2017 17:37:13 GMT-0600 (CST)
+[debug] [2017-11-13T23:37:13.720Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-13T23:37:13.721Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/songsearch-9506f/tokens  
+ Mon Nov 13 2017 17:37:13 GMT-0600 (CST)
+[debug] [2017-11-13T23:37:14.122Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'songsearch-9506f'...
+[info] 
+[info] i  deploying hosting
+[debug] [2017-11-13T23:37:14.980Z] TypeError: Path must be a string. Received [ 'app', 'css', 'partials', 'index.html' ]
+    at assertPath (path.js:7:11)
+    at Object.resolve (path.js:1146:7)
+    at module.exports (/usr/local/lib/node_modules/firebase-tools/lib/resolveProjectPath.js:7:15)
+    at module.exports (/usr/local/lib/node_modules/firebase-tools/lib/deploy/hosting/prepare.js:28:39)
+    at _chain (/usr/local/lib/node_modules/firebase-tools/lib/deploy/index.js:22:45)
+    at deploy (/usr/local/lib/node_modules/firebase-tools/lib/deploy/index.js:71:10)
+    at Command._action (/usr/local/lib/node_modules/firebase-tools/commands/deploy.js:47:12)
+    at /usr/local/lib/node_modules/firebase-tools/lib/command.js:176:29
+    at tryCatch (/usr/local/lib/node_modules/firebase-tools/node_modules/rsvp/dist/rsvp.js:525:12)
+    at invokeCallback (/usr/local/lib/node_modules/firebase-tools/node_modules/rsvp/dist/rsvp.js:538:13)
+[error] 
+[error] Error: An unexpected error has occurred.
