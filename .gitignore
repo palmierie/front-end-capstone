@@ -1,5 +1,6 @@
-lib/.sass-cache
+**/lib/.sass-cache
 .DS_Store
-dist/
-css/
-lib/node_modules
+**/.DS_Store
+**/css/main.css.map
+**/lib/node_modules
+**/lib/package-lock.json

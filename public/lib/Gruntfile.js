@@ -3,9 +3,18 @@
 module.exports = function(grunt) {
 
   grunt.initConfig({
+    browserify: {
+      js: {
+        src: ['../app/**/*.js'],
+        dest: '../build/app.js'
+      },
+      options: {
+        paths: ["./node_modules"]
+      }
+    },
     jshint: {
       options: {
-        predef: [ "document", "console", "$", "$scope", "firebase" ],
+        predef: [ "document", "console", "$", "$scope", "firebase", "alert", "module", "prompt", "FirebaseFactory","localStorage", "location", "require", "window", 'Materialize'],
         esnext: true,
         globalstrict: true,
         globals: {"angular": true, "app": true}
@@ -20,9 +29,12 @@ module.exports = function(grunt) {
       }
     },
     watch: {
+      html:{
+        files: ["../index.html", "../**/*.html"]
+      },
       javascripts: {
         files: ['../app/**/*.js'],
-        tasks: ['jshint']
+        tasks: ['jshint', 'browserify']
       },
       sass: {
         files: ['../sass/**/*.scss'],
@@ -32,5 +44,5 @@ module.exports = function(grunt) {
   });
 
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-  grunt.registerTask('default', ['jshint', 'sass', 'watch']);
+  grunt.registerTask('default', ['jshint', 'sass','browserify', 'watch']);
 };
