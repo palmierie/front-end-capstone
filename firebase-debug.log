@@ -1,24 +1,32 @@
-[debug] [2017-11-13T23:37:13.317Z] ----------------------------------------------------------------------
-[debug] [2017-11-13T23:37:13.320Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
-[debug] [2017-11-13T23:37:13.320Z] CLI Version:   3.15.0
-[debug] [2017-11-13T23:37:13.320Z] Platform:      darwin
-[debug] [2017-11-13T23:37:13.320Z] Node Version:  v6.11.0
-[debug] [2017-11-13T23:37:13.321Z] Time:          Mon Nov 13 2017 17:37:13 GMT-0600 (CST)
-[debug] [2017-11-13T23:37:13.321Z] ----------------------------------------------------------------------
+[debug] [2017-11-27T18:14:52.656Z] ----------------------------------------------------------------------
+[debug] [2017-11-27T18:14:52.659Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2017-11-27T18:14:52.659Z] CLI Version:   3.15.0
+[debug] [2017-11-27T18:14:52.659Z] Platform:      darwin
+[debug] [2017-11-27T18:14:52.659Z] Node Version:  v6.11.0
+[debug] [2017-11-27T18:14:52.660Z] Time:          Mon Nov 27 2017 12:14:52 GMT-0600 (CST)
+[debug] [2017-11-27T18:14:52.660Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2017-11-13T23:37:13.335Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2017-11-13T23:37:13.335Z] > authorizing via signed-in user
-[debug] [2017-11-13T23:37:13.338Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/songsearch-9506f  
- Mon Nov 13 2017 17:37:13 GMT-0600 (CST)
-[debug] [2017-11-13T23:37:13.720Z] <<< HTTP RESPONSE 200
-[debug] [2017-11-13T23:37:13.721Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/songsearch-9506f/tokens  
- Mon Nov 13 2017 17:37:13 GMT-0600 (CST)
-[debug] [2017-11-13T23:37:14.122Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-27T18:14:52.670Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-11-27T18:14:52.670Z] > authorizing via signed-in user
+[debug] [2017-11-27T18:14:52.672Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-11-27T18:14:52.672Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/bleY4KTmHO8XY5iwTEsAs9s3DD-iWm_09PtfxsVMCOs',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Mon Nov 27 2017 12:14:52 GMT-0600 (CST)
+[debug] [2017-11-27T18:14:52.909Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-27T18:14:52.917Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/songsearch-9506f  
+ Mon Nov 27 2017 12:14:52 GMT-0600 (CST)
+[debug] [2017-11-27T18:14:53.313Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-27T18:14:53.314Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/songsearch-9506f/tokens  
+ Mon Nov 27 2017 12:14:53 GMT-0600 (CST)
+[debug] [2017-11-27T18:14:53.696Z] <<< HTTP RESPONSE 200
 [info] 
 [info] === Deploying to 'songsearch-9506f'...
 [info] 
 [info] i  deploying hosting
-[debug] [2017-11-13T23:37:14.980Z] TypeError: Path must be a string. Received [ 'app', 'css', 'partials', 'index.html' ]
+[debug] [2017-11-27T18:14:54.068Z] TypeError: Path must be a string. Received [ 'public' ]
     at assertPath (path.js:7:11)
     at Object.resolve (path.js:1146:7)
     at module.exports (/usr/local/lib/node_modules/firebase-tools/lib/resolveProjectPath.js:7:15)

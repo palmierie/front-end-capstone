@@ -1,0 +1,15 @@
+{
+  "rules": {
+    ".read": "true",
+    ".write": "true",
+      "savedTracks":{
+        ".indexOn": ["trackID"]
+      },
+    	"users":{
+      ".indexOn": ["uid"]
+    	},
+      "toggle":{
+        ".indexOn":["uid"]
+      }
+  }	
+}
