@@ -5,7 +5,7 @@
 
   function makeSongID(){
     return $q((resolve, reject)=>{
-      let makeID = JSON.stringify("using firebase to generate ids");
+      // let makeID = JSON.stringify("using firebase to generate ids");
       $http.post(`${FBCreds.databaseURL}/songID.json`, makeID)
       .then((obj)=>{
         resolve(obj.data.name);

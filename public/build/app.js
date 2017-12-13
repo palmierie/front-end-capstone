@@ -6,11 +6,11 @@
 angular.module("SongSearchApp", ["ngRoute", "ngMaterial", "ui.bootstrap"]);
 
 let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
-  console.log("userFactory is", userFactory);
+  // console.log("userFactory is", userFactory);
   userFactory.isAuthenticated()
   .then( (userExists) => {
     if(userExists){
-      console.log("Authentication Success");
+      // console.log("Authentication Success");
       resolve();
     }else {
 			console.log("Authentication reject");
@@ -69,12 +69,12 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     let user = userFactory.getCurrentUser();
     let changedUserObj = {};
 
-    console.log('WHAT IS TE USERRRR', user);
+    // console.log('WHAT IS TE USERRRR', user);
     
     function getUserDBSettings(){
       dbTglFactory.getDBTgl(user)
       .then((userObj)=>{
-        console.log('userObj', userObj);
+        // console.log('userObj', userObj);
         $scope.data = {
           dbiTunes: userObj.toggleSettings.iTunes,
           dbBeatport: userObj.toggleSettings.Beatport,
@@ -306,12 +306,12 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
               });
               break;
         }
-        console.log('numberOfCalls', numberOfCalls, 'i', i);
+        // console.log('numberOfCalls', numberOfCalls, 'i', i);
         
       });
       function locationRefresh(){
         if (numberOfCalls === i ){
-          console.log('IF STATEMENT TRUE');
+          // console.log('IF STATEMENT TRUE');
           $route.reload();
         }
     }
@@ -338,9 +338,9 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
           if(user !== null){  
             dbTglFactory.getDBTgl(user)
             .then((data)=>{
-              console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
+              // console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
               let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
-              console.log('dbTglinfo', dbTglinfo);
+              // console.log('dbTglinfo', dbTglinfo);
               let numberOfCalls = dbTglinfo.length;
               // get search input
               searchInput = $scope.searchInput;
@@ -371,57 +371,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       } else {
         $scope.isLoggedIn = false;
       }
-    });
-
-    // $scope.myList = ()=>{
-    //   $location.url("/my-list");
-    // };
-
-    // function Dialog  DemoCtrl($scope, $modal){
-      
-      //   $scope.data = {
-      //     boldTextTitle: "You must Sign In to use this feature",
-      //     mode : 'warning'
-      //   };
-      
-      //   $scope.open = function () {
-      //     console.log('OPEN CLICKED!');
-          
-      //     // $scope.data.mode = mode;
-      
-      //     var modalInstance = $uibModal.open({
-      //       templateUrl: '../partials/login-alert.html',
-      //       // controller: navCtrl,
-      //       backdrop: true,
-      //       keyboard: true,
-      //       backdropClick: true,
-      //       size: 'lg',
-      //       resolve: {
-      //         data: function () {
-      //           return $scope.data;
-      //         }
-      //       }
-      //     });
-      
-      
-      //     // modalInstance.result.then(function (selectedItem) {
-      //     //   $scope.selected = selectedItem;
-      //     //     //alert( $scope.selected);
-      //     // }, function () {
-      //     //   $log.info('Modal dismissed at: ' + new Date());
-      //     // });
-      
-      //   };
-      
-      // // }
-      
-      
-      // var ModalInstanceCtrl = function ($scope, $modalInstance, data) {
-      //   $scope.data = data;
-      //   $scope.close = function(/*result*/){
-      //     $modalInstance.close($scope.data);
-      //   };
-      // };
+    });     
 
   };
 
@@ -445,7 +395,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     $scope.apiSearchService = apiSearchService;
     
     $scope.resultsDone = apiSearchService.resultsDone;
-    console.log('apiSearchService.resultsLoaded()', apiSearchService.resultsDone);
+    // console.log('apiSearchService.resultsLoaded()', apiSearchService.resultsDone);
     
     apiSearchService.initResultsDone();
 
@@ -463,7 +413,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         }
         let flattenedArray = [].concat.apply([], newMyListArray);
         patchObj.myList = flattenedArray;
-        console.log('patch obj', patchObj);
+        // console.log('patch obj', patchObj);
         
         myListFactory.patchMyList(userObj.id, patchObj);
       });
@@ -476,7 +426,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     
     $scope.saveFunction = function(event){
 
-      console.log('Save function clicked!');
+      // console.log('Save function clicked!');
       let songDiv = event.currentTarget.parentElement.parentElement;
       let saveObj = {};
       let newTrackName = '';
@@ -493,7 +443,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         saveObj.trackViewUrl = songDiv.getElementsByClassName('buy-url')[0].getElementsByTagName('a')[0].getAttribute("ng-href");
         saveObj.database = songDiv.getElementsByClassName('song-database')[0].innerHTML;
         saveObj.id = songId;
-        console.log('saveObj', saveObj);
+        // console.log('saveObj', saveObj);
         buildPatchObject(saveObj);
       });
     };
@@ -510,7 +460,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 
 	var userCtrl = function ($scope, $window, userFactory, $location, dbTglFactory) {
 
-		console.log("userCtrl loaded");
+		// console.log("userCtrl loaded");
 
 		// Account login creds received for current users:
 		$scope.account = {
@@ -611,32 +561,32 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
 				$scope.isLoggedIn = true;
-				console.log("firebase.auth()", firebase.auth());
-				console.log("currentUser logged in?", user);
-				console.log("logged in t-f", $scope.isLoggedIn );
+				// console.log("firebase.auth()", firebase.auth());
+				// console.log("currentUser logged in?", user);
+				// console.log("logged in t-f", $scope.isLoggedIn );
 				$scope.$apply();
 			} else {
 				$scope.isLoggedIn = false;
-				console.log("user logged in?", $scope.isLoggedIn);
+				// console.log("user logged in?", $scope.isLoggedIn);
 				$window.location.href = "#!/login";
 			}
 		});
 
 		$scope.loginGoogle = () => {
-			console.log("you clicked on google login");
+			// console.log("you clicked on google login");
 			userFactory.authWithProvider()
 			.then((result) => {
 				let user = result.user.uid;
 				$location.path("/home");
 				addUser();
 				$scope.$apply();
-				console.log("loginGoogle .then ran");
+				// console.log("loginGoogle .then ran");
 			})
 			.catch((error) => {
-				console.log("error with google login");
+				// console.log("error with google login");
 				let errorCode = error.code;
 				let errorMessage = error.message;
-				console.log("error", error); 
+				console.log("error with google login", error); 
 			});
 		};
 
@@ -644,14 +594,14 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 		function addUser(){
 			userFactory.getFBCurrentUser()
 			.then( (user) => {
-				console.log("****user in addUser****", user);
+				// console.log("****user in addUser****", user);
 				// console.log("userFactory.userIsInFirebase(user.uid) in addUser", userFactory.userIsInFirebase(user.uid));
 				userFactory.userIsInFirebase(user.uid)
 				.then((isInFirebase) => {
-					console.log("isInFirebase inside nested .then in addUser", isInFirebase);
-					console.log("user in nested .then in addUser", user);
-					console.log("user.email in nested .then in addUser", user.email);
-					console.log("user.displayName", user.displayName);
+					// console.log("isInFirebase inside nested .then in addUser", isInFirebase);
+					// console.log("user in nested .then in addUser", user);
+					// console.log("user.email in nested .then in addUser", user.email);
+					// console.log("user.displayName", user.displayName);
 					if(isInFirebase === false) {
 						if($scope.displayName === ""){
 							let userObj = {
@@ -665,7 +615,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 														}
 							};
 											
-							console.log("userObj in addUser", userObj);
+							// console.log("userObj in addUser", userObj);
 							userFactory.addUserToFirebase(userObj);
 						}else {
 							let userObj = {
@@ -679,11 +629,11 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 														}																	
 							};
 					
-							console.log("userObj in addUser", userObj);
+							// console.log("userObj in addUser", userObj);
 							userFactory.addUserToFirebase(userObj);
 						}
 					}else {
-						console.log("user already in firebase");
+						// console.log("user already in firebase");
 					}
 					//show home view
 					$window.location.href = "#!/";
@@ -776,13 +726,13 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     this.songArrayFunct = function(arraySongObj){
       tempArray.push(arraySongObj);
       this.arraySongObjFinal = [].concat.apply([],tempArray);
-      console.log('tempArray', tempArray);
-      console.log('this.arraySongObjFinal', this.arraySongObjFinal);
+      // console.log('tempArray', tempArray);
+      // console.log('this.arraySongObjFinal', this.arraySongObjFinal);
       this.resultsDone = numberOfCalls===numberOfResolves ? true : false;
       if (this.resultsDone === true){
         numberOfResolves = 0;
       }
-      console.log('results done in api Service', this.resultsDone);
+      // console.log('results done in api Service', this.resultsDone);
       return this.arraySongObjFinal;
     };
     
@@ -984,81 +934,83 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
           });
       });
     } // End function searchBeatportArtists
-
+    
     this.searchHeadlinerMusicClub = function(search){
       return $q((resolve, reject)=>{
         $http.get(`https://headlinermusicclub.com/?s=${search}&post_type=audio`)
         .then((result)=>{
+        
+          let dataObj = $('<div>').html(result.data)[0].getElementsByClassName('audio_list')[0];
+          let artistDivArr = dataObj.getElementsByClassName('artist-name');
+          let songDivArr = dataObj.getElementsByClassName('song-name');
+          let releaseDateDivArr = dataObj.getElementsByClassName('add-date');
+          let buyLinkDivArr = dataObj.getElementsByClassName('song-player amusic-song-player  song-player--0 audio-player-wrapper');
+          
+          let masterArrLength = artistDivArr.length;
+          // final array
           let headlinerMCArray = [];
-          // console.log('data', result.data);
-          let start1 = result.data.indexOf('class="audio_list');
-          let end1 = result.data.indexOf('class="search-res');
-          let string1 = result.data.slice(start1,end1); 
-          //count number of songs to be iterated through
-          let array1 = string1.match(/class="artist-name"/g);
-          console.log('array1 length', array1.length);
-          let stringChopped = string1;
-
-          // BUILD LOOP TO HOLD DATA FROM EACH SONG
-          let k = 2;
-          for (var i = 0; i < array1.length; i++) {
-            let selectedObj = {};
-            //get Artist Name
-            let startArtist = stringChopped.indexOf('class="artist-name') + 20;
-            let endArtist = stringChopped.indexOf('class="song-name') - 11;
-            let preArtist = stringChopped.slice(startArtist,endArtist);
-              //regex to get and switch & sign
-            let artist = preArtist.replace(/&amp;/g, "&").replace(/&#038;/g, "&").replace(/&#8217;/g, "'").replace(/&#8216;/g, "‘");
-
-            //get Song Title
-            let startSong = stringChopped.indexOf('class="song-name') + 26;
-            let endSong = stringChopped.indexOf('class="rating-audio') - 26;
-            let preSong = stringChopped.slice(startSong,endSong); 
-              //filter out exclusive div content to fix end slice point
-            if(preSong.includes('class="audio-hmc') === true){
-              let preSongEnd = preSong.indexOf('class="audio-hmc') - 26;
-              preSong = preSong.slice(0,preSongEnd);
-            }
-              //regex to get and switch & sign
-            let song = preSong.replace(/&amp;/g, "&").replace(/&#038;/g, "&").replace(/&#8217;/g, "'").replace(/&#8216;/g, "‘");
-
-            //get Release Date
-            let startRDate = stringChopped.indexOf('class="add-date') + 49;
-            let endRDate = stringChopped.indexOf('class="download-version') - 29;
-            let releaseDateUnordered = stringChopped.slice(startRDate,endRDate);
+          // arrays to be iterated through and pushed into selectedObj
+          let artistArr = [];
+          let songArr = [];
+          let releaseDateArr = [];
+          let buyLinkArr = [];
+          
+          //build array of artist names
+          for (let a = 0; a < masterArrLength; a++) {
+            let artistNameDiv = $(artistDivArr)[a];
+            let artist = $(artistNameDiv).text();
+            artistArr.push(artist);
+          }
+          
+          // build array of song names
+          for (let s = 0; s < masterArrLength; s++) {
+            let songNameDiv = $(songDivArr)[s];
+            // get song from child elements and trim whitespace
+            let song = $(songNameDiv).find('h3').text().trim();
+            songArr.push(song);
+          }
+          
+          // build array of release dates
+          for (let r = 0; r < masterArrLength; r++) {
+            let releaseDateDiv = $(releaseDateDivArr)[r];
+            let relDateAndTextDiv = $(releaseDateDiv).text().trim();
+            // remove span tag text - "Added:"
+            let releaseDateUnordered = relDateAndTextDiv.slice(6).trim();
             //format date to match other databases
             let month = releaseDateUnordered.slice(0,2);
             let day = releaseDateUnordered.slice(3,5);
             let year = releaseDateUnordered.slice(6);
             let releaseDate = `${year}-${month}-${day}`;
-            //get Buy Link
-            let startBuyLink = stringChopped.indexOf('data-audio_file=') + 17;
-            let endBuyLink = stringChopped.indexOf('</div></li>') - 2;
-            let buyLink = stringChopped.slice(startBuyLink,endBuyLink);
-
-            // CHOP stringChopped AFTER SONG
-            let chopStrStart = stringChopped.indexOf(`src="https://headlinermusicclub.com/blank.mp3?_=${k}"`);
-            stringChopped = stringChopped.slice(chopStrStart);
-            
-            //build song obj
-            selectedObj.artistName = artist;
-            selectedObj.trackCensoredName = song;
-            selectedObj.trackLength = "not listed";
-            selectedObj.releaseDate = releaseDate;
-            selectedObj.trackViewUrl = buyLink;
-            selectedObj.database = "H. M. C.";
-
-            headlinerMCArray.push(selectedObj);
-            k++;
+            releaseDateArr.push(releaseDate);
           }
-          console.log('headlinerMCArray',headlinerMCArray);
+          
+          // build array of buylinks
+          for (let b = 0; b < masterArrLength; b++) {
+            let buyLinkDiv = $(buyLinkDivArr)[b];
+            let buyLink = $(buyLinkDiv).attr('data-audio_file');
+            buyLinkArr.push(buyLink);
+          }
+          
+          for (let i = 0; i < masterArrLength; i++) {
+            //new object to be pushed to headlinerMCArray
+            let selectedObj = {};
+            //build song obj
+            selectedObj.artistName = artistArr[i];
+            selectedObj.trackCensoredName = songArr[i];
+            selectedObj.trackLength = "not listed";
+            selectedObj.releaseDate = releaseDateArr[i];
+            selectedObj.trackViewUrl = buyLinkArr[i];
+            selectedObj.database = "H. M. C.";
+            headlinerMCArray.push(selectedObj);
+          }
+          
           ++numberOfResolves;
           this.songArrayFunct(headlinerMCArray);
           resolve();
         });
       });
     };  //End Function searchHeadlinerMusicClub
-    
+
   };
   
   apiSearchService.$inject = ['$q', '$http', '$location'];
@@ -1076,14 +1028,14 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       return $q((resolve, reject) => {
         $http.get(`${FBCreds.databaseURL}/users/.json?orderBy="uid"&equalTo="${uid}"`)
         .then((data) => {
-          console.log('data',data);
+          // console.log('data',data);
           let toggleObjects = data.data;
           let TglArray = [];
           Object.keys(toggleObjects).forEach(function (key) {
               toggleObjects[key].id = key;
               TglArray.push(toggleObjects[key]);
           });
-          console.log('UIDArray', TglArray[0].toggleSettings);
+          // console.log('UIDArray', TglArray[0].toggleSettings);
           resolve(TglArray[0]);
         });
       });
@@ -1139,7 +1091,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 
   function makeSongID(){
     return $q((resolve, reject)=>{
-      let makeID = JSON.stringify("using firebase to generate ids");
+      // let makeID = JSON.stringify("using firebase to generate ids");
       $http.post(`${FBCreds.databaseURL}/songID.json`, makeID)
       .then((obj)=>{
         resolve(obj.data.name);
@@ -1202,7 +1154,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     //use the current user uid to get full user object from fb database
     const getCurrentUserFullObj = function(uid){
       return $q((resolve, reject) => {
-        console.log("inside getCurrentUserFullObj");
+        // console.log("inside getCurrentUserFullObj");
         $http.get(`${FBCreds.databaseURL}/users/.json?orderBy="uid"&equalTo="${uid}"`)
         .then((data) => {
           // console.log("data in getCurrentUserFullObj", data);
@@ -1212,7 +1164,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
                 objectArr.push(currentUserFullObj[key]);
             });
           currentUserFullObj = objectArr[0];
-          console.log("currentUserFullObj", currentUserFullObj);
+          // console.log("currentUserFullObj", currentUserFullObj);
           resolve(currentUserFullObj);
         });
       });
@@ -1295,7 +1247,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
           //If there are any users in the db (data.data!== null), then check to see if the passed user is in FB
           if (data.data !== null) {
             let userObjects = data.data;
-            console.log("userObjects", userObjects);
+            // console.log("userObjects", userObjects);
             let UIDArray = [];
             Object.keys(userObjects).forEach(function (key) {
               UIDArray.push(userObjects[key].uid);
@@ -1304,11 +1256,11 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
             for (let i = 0; i < UIDArray.length; i++) {
               // console.log("UIDArray[i]: ", UIDArray[i], "uid: ", uid);
               if (UIDArray[i] === uid) {
-                console.log("userIsInFirebase was true with value: ", uid);
+                // console.log("userIsInFirebase was true with value: ", uid);
                 isInFirebase = true;
                 break;
               } else {
-                console.log("userIsInFirebase was false with value: ", uid);
+                // console.log("userIsInFirebase was false with value: ", uid);
                 isInFirebase = false;
               }
             }
@@ -1327,7 +1279,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         return $http.post(`${FBCreds.databaseURL}/users.json`, newObj)
         .then((data) => {
             // console.log("added user data returned: ", data);
-            console.log("user was added to firebase db!");
+            // console.log("user was added to firebase db!");
             return data;
 
         }, (error) => {

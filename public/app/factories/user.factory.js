@@ -18,7 +18,7 @@
     //use the current user uid to get full user object from fb database
     const getCurrentUserFullObj = function(uid){
       return $q((resolve, reject) => {
-        console.log("inside getCurrentUserFullObj");
+        // console.log("inside getCurrentUserFullObj");
         $http.get(`${FBCreds.databaseURL}/users/.json?orderBy="uid"&equalTo="${uid}"`)
         .then((data) => {
           // console.log("data in getCurrentUserFullObj", data);
@@ -28,7 +28,7 @@
                 objectArr.push(currentUserFullObj[key]);
             });
           currentUserFullObj = objectArr[0];
-          console.log("currentUserFullObj", currentUserFullObj);
+          // console.log("currentUserFullObj", currentUserFullObj);
           resolve(currentUserFullObj);
         });
       });
@@ -111,7 +111,7 @@
           //If there are any users in the db (data.data!== null), then check to see if the passed user is in FB
           if (data.data !== null) {
             let userObjects = data.data;
-            console.log("userObjects", userObjects);
+            // console.log("userObjects", userObjects);
             let UIDArray = [];
             Object.keys(userObjects).forEach(function (key) {
               UIDArray.push(userObjects[key].uid);
@@ -120,11 +120,11 @@
             for (let i = 0; i < UIDArray.length; i++) {
               // console.log("UIDArray[i]: ", UIDArray[i], "uid: ", uid);
               if (UIDArray[i] === uid) {
-                console.log("userIsInFirebase was true with value: ", uid);
+                // console.log("userIsInFirebase was true with value: ", uid);
                 isInFirebase = true;
                 break;
               } else {
-                console.log("userIsInFirebase was false with value: ", uid);
+                // console.log("userIsInFirebase was false with value: ", uid);
                 isInFirebase = false;
               }
             }
@@ -143,7 +143,7 @@
         return $http.post(`${FBCreds.databaseURL}/users.json`, newObj)
         .then((data) => {
             // console.log("added user data returned: ", data);
-            console.log("user was added to firebase db!");
+            // console.log("user was added to firebase db!");
             return data;
 
         }, (error) => {

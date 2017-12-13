@@ -62,13 +62,13 @@
     this.songArrayFunct = function(arraySongObj){
       tempArray.push(arraySongObj);
       this.arraySongObjFinal = [].concat.apply([],tempArray);
-      console.log('tempArray', tempArray);
-      console.log('this.arraySongObjFinal', this.arraySongObjFinal);
+      // console.log('tempArray', tempArray);
+      // console.log('this.arraySongObjFinal', this.arraySongObjFinal);
       this.resultsDone = numberOfCalls===numberOfResolves ? true : false;
       if (this.resultsDone === true){
         numberOfResolves = 0;
       }
-      console.log('results done in api Service', this.resultsDone);
+      // console.log('results done in api Service', this.resultsDone);
       return this.arraySongObjFinal;
     };
     
@@ -270,81 +270,83 @@
           });
       });
     } // End function searchBeatportArtists
-
+    
     this.searchHeadlinerMusicClub = function(search){
       return $q((resolve, reject)=>{
         $http.get(`https://headlinermusicclub.com/?s=${search}&post_type=audio`)
         .then((result)=>{
+        
+          let dataObj = $('<div>').html(result.data)[0].getElementsByClassName('audio_list')[0];
+          let artistDivArr = dataObj.getElementsByClassName('artist-name');
+          let songDivArr = dataObj.getElementsByClassName('song-name');
+          let releaseDateDivArr = dataObj.getElementsByClassName('add-date');
+          let buyLinkDivArr = dataObj.getElementsByClassName('song-player amusic-song-player  song-player--0 audio-player-wrapper');
+          
+          let masterArrLength = artistDivArr.length;
+          // final array
           let headlinerMCArray = [];
-          // console.log('data', result.data);
-          let start1 = result.data.indexOf('class="audio_list');
-          let end1 = result.data.indexOf('class="search-res');
-          let string1 = result.data.slice(start1,end1); 
-          //count number of songs to be iterated through
-          let array1 = string1.match(/class="artist-name"/g);
-          console.log('array1 length', array1.length);
-          let stringChopped = string1;
-
-          // BUILD LOOP TO HOLD DATA FROM EACH SONG
-          let k = 2;
-          for (var i = 0; i < array1.length; i++) {
-            let selectedObj = {};
-            //get Artist Name
-            let startArtist = stringChopped.indexOf('class="artist-name') + 20;
-            let endArtist = stringChopped.indexOf('class="song-name') - 11;
-            let preArtist = stringChopped.slice(startArtist,endArtist);
-              //regex to get and switch & sign
-            let artist = preArtist.replace(/&amp;/g, "&").replace(/&#038;/g, "&").replace(/&#8217;/g, "'").replace(/&#8216;/g, "‘");
-
-            //get Song Title
-            let startSong = stringChopped.indexOf('class="song-name') + 26;
-            let endSong = stringChopped.indexOf('class="rating-audio') - 26;
-            let preSong = stringChopped.slice(startSong,endSong); 
-              //filter out exclusive div content to fix end slice point
-            if(preSong.includes('class="audio-hmc') === true){
-              let preSongEnd = preSong.indexOf('class="audio-hmc') - 26;
-              preSong = preSong.slice(0,preSongEnd);
-            }
-              //regex to get and switch & sign
-            let song = preSong.replace(/&amp;/g, "&").replace(/&#038;/g, "&").replace(/&#8217;/g, "'").replace(/&#8216;/g, "‘");
-
-            //get Release Date
-            let startRDate = stringChopped.indexOf('class="add-date') + 49;
-            let endRDate = stringChopped.indexOf('class="download-version') - 29;
-            let releaseDateUnordered = stringChopped.slice(startRDate,endRDate);
+          // arrays to be iterated through and pushed into selectedObj
+          let artistArr = [];
+          let songArr = [];
+          let releaseDateArr = [];
+          let buyLinkArr = [];
+          
+          //build array of artist names
+          for (let a = 0; a < masterArrLength; a++) {
+            let artistNameDiv = $(artistDivArr)[a];
+            let artist = $(artistNameDiv).text();
+            artistArr.push(artist);
+          }
+          
+          // build array of song names
+          for (let s = 0; s < masterArrLength; s++) {
+            let songNameDiv = $(songDivArr)[s];
+            // get song from child elements and trim whitespace
+            let song = $(songNameDiv).find('h3').text().trim();
+            songArr.push(song);
+          }
+          
+          // build array of release dates
+          for (let r = 0; r < masterArrLength; r++) {
+            let releaseDateDiv = $(releaseDateDivArr)[r];
+            let relDateAndTextDiv = $(releaseDateDiv).text().trim();
+            // remove span tag text - "Added:"
+            let releaseDateUnordered = relDateAndTextDiv.slice(6).trim();
             //format date to match other databases
             let month = releaseDateUnordered.slice(0,2);
             let day = releaseDateUnordered.slice(3,5);
             let year = releaseDateUnordered.slice(6);
             let releaseDate = `${year}-${month}-${day}`;
-            //get Buy Link
-            let startBuyLink = stringChopped.indexOf('data-audio_file=') + 17;
-            let endBuyLink = stringChopped.indexOf('</div></li>') - 2;
-            let buyLink = stringChopped.slice(startBuyLink,endBuyLink);
-
-            // CHOP stringChopped AFTER SONG
-            let chopStrStart = stringChopped.indexOf(`src="https://headlinermusicclub.com/blank.mp3?_=${k}"`);
-            stringChopped = stringChopped.slice(chopStrStart);
-            
-            //build song obj
-            selectedObj.artistName = artist;
-            selectedObj.trackCensoredName = song;
-            selectedObj.trackLength = "not listed";
-            selectedObj.releaseDate = releaseDate;
-            selectedObj.trackViewUrl = buyLink;
-            selectedObj.database = "H. M. C.";
-
-            headlinerMCArray.push(selectedObj);
-            k++;
+            releaseDateArr.push(releaseDate);
           }
-          console.log('headlinerMCArray',headlinerMCArray);
+          
+          // build array of buylinks
+          for (let b = 0; b < masterArrLength; b++) {
+            let buyLinkDiv = $(buyLinkDivArr)[b];
+            let buyLink = $(buyLinkDiv).attr('data-audio_file');
+            buyLinkArr.push(buyLink);
+          }
+          
+          for (let i = 0; i < masterArrLength; i++) {
+            //new object to be pushed to headlinerMCArray
+            let selectedObj = {};
+            //build song obj
+            selectedObj.artistName = artistArr[i];
+            selectedObj.trackCensoredName = songArr[i];
+            selectedObj.trackLength = "not listed";
+            selectedObj.releaseDate = releaseDateArr[i];
+            selectedObj.trackViewUrl = buyLinkArr[i];
+            selectedObj.database = "H. M. C.";
+            headlinerMCArray.push(selectedObj);
+          }
+          
           ++numberOfResolves;
           this.songArrayFunct(headlinerMCArray);
           resolve();
         });
       });
     };  //End Function searchHeadlinerMusicClub
-    
+
   };
   
   apiSearchService.$inject = ['$q', '$http', '$location'];

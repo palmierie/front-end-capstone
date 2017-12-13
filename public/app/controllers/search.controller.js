@@ -13,7 +13,7 @@
     $scope.apiSearchService = apiSearchService;
     
     $scope.resultsDone = apiSearchService.resultsDone;
-    console.log('apiSearchService.resultsLoaded()', apiSearchService.resultsDone);
+    // console.log('apiSearchService.resultsLoaded()', apiSearchService.resultsDone);
     
     apiSearchService.initResultsDone();
 
@@ -31,7 +31,7 @@
         }
         let flattenedArray = [].concat.apply([], newMyListArray);
         patchObj.myList = flattenedArray;
-        console.log('patch obj', patchObj);
+        // console.log('patch obj', patchObj);
         
         myListFactory.patchMyList(userObj.id, patchObj);
       });
@@ -44,7 +44,7 @@
     
     $scope.saveFunction = function(event){
 
-      console.log('Save function clicked!');
+      // console.log('Save function clicked!');
       let songDiv = event.currentTarget.parentElement.parentElement;
       let saveObj = {};
       let newTrackName = '';
@@ -61,7 +61,7 @@
         saveObj.trackViewUrl = songDiv.getElementsByClassName('buy-url')[0].getElementsByTagName('a')[0].getAttribute("ng-href");
         saveObj.database = songDiv.getElementsByClassName('song-database')[0].innerHTML;
         saveObj.id = songId;
-        console.log('saveObj', saveObj);
+        // console.log('saveObj', saveObj);
         buildPatchObject(saveObj);
       });
     };
