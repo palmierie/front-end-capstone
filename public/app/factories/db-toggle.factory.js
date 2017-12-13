@@ -8,14 +8,14 @@
       return $q((resolve, reject) => {
         $http.get(`${FBCreds.databaseURL}/users/.json?orderBy="uid"&equalTo="${uid}"`)
         .then((data) => {
-          console.log('data',data);
+          // console.log('data',data);
           let toggleObjects = data.data;
           let TglArray = [];
           Object.keys(toggleObjects).forEach(function (key) {
               toggleObjects[key].id = key;
               TglArray.push(toggleObjects[key]);
           });
-          console.log('UIDArray', TglArray[0].toggleSettings);
+          // console.log('UIDArray', TglArray[0].toggleSettings);
           resolve(TglArray[0]);
         });
       });

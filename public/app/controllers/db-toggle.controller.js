@@ -5,12 +5,12 @@
     let user = userFactory.getCurrentUser();
     let changedUserObj = {};
 
-    console.log('WHAT IS TE USERRRR', user);
+    // console.log('WHAT IS TE USERRRR', user);
     
     function getUserDBSettings(){
       dbTglFactory.getDBTgl(user)
       .then((userObj)=>{
-        console.log('userObj', userObj);
+        // console.log('userObj', userObj);
         $scope.data = {
           dbiTunes: userObj.toggleSettings.iTunes,
           dbBeatport: userObj.toggleSettings.Beatport,

@@ -3,7 +3,7 @@
 
 	var userCtrl = function ($scope, $window, userFactory, $location, dbTglFactory) {
 
-		console.log("userCtrl loaded");
+		// console.log("userCtrl loaded");
 
 		// Account login creds received for current users:
 		$scope.account = {
@@ -104,32 +104,32 @@
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
 				$scope.isLoggedIn = true;
-				console.log("firebase.auth()", firebase.auth());
-				console.log("currentUser logged in?", user);
-				console.log("logged in t-f", $scope.isLoggedIn );
+				// console.log("firebase.auth()", firebase.auth());
+				// console.log("currentUser logged in?", user);
+				// console.log("logged in t-f", $scope.isLoggedIn );
 				$scope.$apply();
 			} else {
 				$scope.isLoggedIn = false;
-				console.log("user logged in?", $scope.isLoggedIn);
+				// console.log("user logged in?", $scope.isLoggedIn);
 				$window.location.href = "#!/login";
 			}
 		});
 
 		$scope.loginGoogle = () => {
-			console.log("you clicked on google login");
+			// console.log("you clicked on google login");
 			userFactory.authWithProvider()
 			.then((result) => {
 				let user = result.user.uid;
 				$location.path("/home");
 				addUser();
 				$scope.$apply();
-				console.log("loginGoogle .then ran");
+				// console.log("loginGoogle .then ran");
 			})
 			.catch((error) => {
-				console.log("error with google login");
+				// console.log("error with google login");
 				let errorCode = error.code;
 				let errorMessage = error.message;
-				console.log("error", error); 
+				console.log("error with google login", error); 
 			});
 		};
 
@@ -137,14 +137,14 @@
 		function addUser(){
 			userFactory.getFBCurrentUser()
 			.then( (user) => {
-				console.log("****user in addUser****", user);
+				// console.log("****user in addUser****", user);
 				// console.log("userFactory.userIsInFirebase(user.uid) in addUser", userFactory.userIsInFirebase(user.uid));
 				userFactory.userIsInFirebase(user.uid)
 				.then((isInFirebase) => {
-					console.log("isInFirebase inside nested .then in addUser", isInFirebase);
-					console.log("user in nested .then in addUser", user);
-					console.log("user.email in nested .then in addUser", user.email);
-					console.log("user.displayName", user.displayName);
+					// console.log("isInFirebase inside nested .then in addUser", isInFirebase);
+					// console.log("user in nested .then in addUser", user);
+					// console.log("user.email in nested .then in addUser", user.email);
+					// console.log("user.displayName", user.displayName);
 					if(isInFirebase === false) {
 						if($scope.displayName === ""){
 							let userObj = {
@@ -158,7 +158,7 @@
 														}
 							};
 											
-							console.log("userObj in addUser", userObj);
+							// console.log("userObj in addUser", userObj);
 							userFactory.addUserToFirebase(userObj);
 						}else {
 							let userObj = {
@@ -172,11 +172,11 @@
 														}																	
 							};
 					
-							console.log("userObj in addUser", userObj);
+							// console.log("userObj in addUser", userObj);
 							userFactory.addUserToFirebase(userObj);
 						}
 					}else {
-						console.log("user already in firebase");
+						// console.log("user already in firebase");
 					}
 					//show home view
 					$window.location.href = "#!/";

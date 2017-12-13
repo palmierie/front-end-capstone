@@ -46,12 +46,12 @@
               });
               break;
         }
-        console.log('numberOfCalls', numberOfCalls, 'i', i);
+        // console.log('numberOfCalls', numberOfCalls, 'i', i);
         
       });
       function locationRefresh(){
         if (numberOfCalls === i ){
-          console.log('IF STATEMENT TRUE');
+          // console.log('IF STATEMENT TRUE');
           $route.reload();
         }
     }
@@ -78,9 +78,9 @@
           if(user !== null){  
             dbTglFactory.getDBTgl(user)
             .then((data)=>{
-              console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
+              // console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
               let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
-              console.log('dbTglinfo', dbTglinfo);
+              // console.log('dbTglinfo', dbTglinfo);
               let numberOfCalls = dbTglinfo.length;
               // get search input
               searchInput = $scope.searchInput;
@@ -111,57 +111,7 @@
       } else {
         $scope.isLoggedIn = false;
       }
-    });
-
-    // $scope.myList = ()=>{
-    //   $location.url("/my-list");
-    // };
-
-    // function Dialog  DemoCtrl($scope, $modal){
-      
-      //   $scope.data = {
-      //     boldTextTitle: "You must Sign In to use this feature",
-      //     mode : 'warning'
-      //   };
-      
-      //   $scope.open = function () {
-      //     console.log('OPEN CLICKED!');
-          
-      //     // $scope.data.mode = mode;
-      
-      //     var modalInstance = $uibModal.open({
-      //       templateUrl: '../partials/login-alert.html',
-      //       // controller: navCtrl,
-      //       backdrop: true,
-      //       keyboard: true,
-      //       backdropClick: true,
-      //       size: 'lg',
-      //       resolve: {
-      //         data: function () {
-      //           return $scope.data;
-      //         }
-      //       }
-      //     });
-      
-      
-      //     // modalInstance.result.then(function (selectedItem) {
-      //     //   $scope.selected = selectedItem;
-      //     //     //alert( $scope.selected);
-      //     // }, function () {
-      //     //   $log.info('Modal dismissed at: ' + new Date());
-      //     // });
-      
-      //   };
-      
-      // // }
-      
-      
-      // var ModalInstanceCtrl = function ($scope, $modalInstance, data) {
-      //   $scope.data = data;
-      //   $scope.close = function(/*result*/){
-      //     $modalInstance.close($scope.data);
-      //   };
-      // };
+    });     
 
   };
 
