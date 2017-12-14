@@ -7,8 +7,6 @@
 		};
 	};
 	
-	// $inject
-
 	angular.module("SongSearchApp").factory("filterFactory", filterFactory);
 	
 })();

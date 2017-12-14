@@ -1,14 +1,10 @@
 <nav class="navbar navbar-expand-md custom-navbar" ng-controller="navCtrl">
   <a class="navbar-brand site-title" href="#!/">SongSearch</a>
-
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <form class="form-inline mt-2 mt-md-0 center-search-custom">
       <input class="form-control mr-2 custom-search" size="60" type="text" autofocus="true" placeholder="Search" aria-label="Search" ng-keypress="searchFunct($event)" ng-focus="clear()" ng-model="searchInput">
     </form>
     <ul class="navbar-nav ml-auto">
-        <!-- <li class="nav-item">
-            <a class="nav-link" ng-click="open()" ng-href="#">BUTTON!</a>
-          </li> -->
       <li class="nav-item" ng-show="!isLoggedIn">
         <a class="nav-link" ng-click="alert()">My List</a>
       </li>
@@ -25,8 +21,6 @@
       <li class="nav-item" ng-show="isLoggedIn">
           <a class="nav-link" ng-href="#!/settings">Settings</a>
       </li>
-    </ul>
-    
-    
+    </ul> 
   </div>
 </nav>
