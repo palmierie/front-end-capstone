@@ -29,13 +29,6 @@
           }
         });
     
-        // modalInstance.result.then(function (selectedItem) {
-        //   $scope.selected = selectedItem;
-        //     //alert( $scope.selected);
-        // }, function () {
-        //   $log.info('Modal dismissed at: ' + new Date());
-        // });
-    
       };
     
     }

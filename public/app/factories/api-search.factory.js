@@ -35,7 +35,6 @@
         .then((arraySongObj)=>{
           let flattenedArray = [].concat.apply([],arraySongObj);
           ++numberOfResolves;
-          console.log('numberOfResolves iTUnes', numberOfResolves);
           this.songArrayFunct(flattenedArray);
           resolve();
         });
@@ -52,7 +51,6 @@
           .then((arraySongObj)=>{
             let flattenedArray = [].concat.apply([],arraySongObj);
             ++numberOfResolves;
-            console.log('numberOfResolves BP', numberOfResolves);
             this.songArrayFunct(flattenedArray);
             resolve();
           });
@@ -62,13 +60,10 @@
     this.songArrayFunct = function(arraySongObj){
       tempArray.push(arraySongObj);
       this.arraySongObjFinal = [].concat.apply([],tempArray);
-      // console.log('tempArray', tempArray);
-      // console.log('this.arraySongObjFinal', this.arraySongObjFinal);
       this.resultsDone = numberOfCalls===numberOfResolves ? true : false;
       if (this.resultsDone === true){
         numberOfResolves = 0;
       }
-      // console.log('results done in api Service', this.resultsDone);
       return this.arraySongObjFinal;
     };
     
@@ -97,7 +92,6 @@
       return $q((resolve, reject) => {
         $http.get(`https://itunes.apple.com/search?media=music&entity=song&attribute=songTerm&term=${search}&limit=25`)
           .then((result) => {
-            console.log('result from promise', result);
             let arrResult = result.data.results;
           
             for (var i = 0; i < arrResult.length; i++) {
@@ -111,7 +105,6 @@
 
               songSearchiTunesArray.push(selectedObj);
             }
-            console.log('arraySongObj', songSearchiTunesArray);  
             resolve(songSearchiTunesArray);
         }).catch((error) => {
           reject(error);
@@ -124,7 +117,6 @@
       return $q((resolve, reject) => {
         $http.get(`https://itunes.apple.com/search?media=music&entity=song&attribute=artistTerm&term=${search}&limit=50`)
           .then((result) => {
-            console.log('result from promise', result);
             let arrResult = result.data.results;
 
             for (var i = 0; i < arrResult.length; i++) {
@@ -138,7 +130,6 @@
 
               songArtistSearchiTunesArray.push(selectedObj);
             }
-            console.log('arraySongObj Artist', songArtistSearchiTunesArray);
             resolve(songArtistSearchiTunesArray);
         }).catch((error) => {
           reject(error);
@@ -168,11 +159,9 @@
           let end1 = string2.indexOf("window.Sliders");
           let end2 = end1 - 12;
           let string3 = string2.slice(0,end2);
-          //console.log('cut string3', string3);
           let string4 = `{${string3}}`;
           let jsonObj = JSON.parse(string4);
           let tracksObjArr = jsonObj.tracks;
-          console.log('jsonobj', tracksObjArr);
       
           for (var i = 0; i < tracksObjArr.length; i++) {
               let selectedObj = {};
@@ -189,7 +178,6 @@
 
               songBeatportArray.push(selectedObj);
           }
-          console.log('songBeatportArray', songBeatportArray);
           resolve(songBeatportArray);
         });
 
@@ -216,7 +204,6 @@
           let end0 = result.data.indexOf("artist-gradient-overlay");
           let end1 = end0 - 27;
           let string1 = result.data.slice(start1, end1);
-          console.log('cut string1', string1);
           resolve(string1);
         });
       });
@@ -226,13 +213,11 @@
       return $q((resolve, reject)=>{
         searchBpArtistLink(search)
           .then((artistLink)=>{
-            console.log('artistLink', artistLink);
             var artistBeatportArray = [];
             let bpTrackUrl = 'https://www.beatport.com/track/';
             
             $http.get(`https://www.beatport.com${artistLink}/tracks?per-page=50`)
               .then((artistResult)=>{
-              // console.log('artist result', artistResult.data);
                 // slice to <script id="data-objects">
                 let start1 = artistResult.data.indexOf("data-objects");
                 let string1 = artistResult.data.slice(start1);      
@@ -248,7 +233,6 @@
                 let string4 = `{${string3}}`;
                 let jsonObj = JSON.parse(string4);
                 let tracksObjArr = jsonObj.tracks;
-                console.log('jsonobj', tracksObjArr);
                 for (var i = 0; i < tracksObjArr.length; i++) {
                   let selectedObj = {};
                   let artistNames = [];
@@ -264,7 +248,6 @@
 
                   artistBeatportArray.push(selectedObj);
                 }
-                console.log('songBeatportArray', artistBeatportArray);
                 resolve(artistBeatportArray);
               });
           });

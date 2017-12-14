@@ -1,6 +1,5 @@
 (function(){
   "use strict";
-  // having $window injected forces reload of page
   var navCtrl = function ($scope, $route, $uibModal, $window, $location, userFactory, apiSearchService, dbTglFactory) {
 
     $scope.isLoggedIn = false;
@@ -46,12 +45,10 @@
               });
               break;
         }
-        // console.log('numberOfCalls', numberOfCalls, 'i', i);
         
       });
       function locationRefresh(){
         if (numberOfCalls === i ){
-          // console.log('IF STATEMENT TRUE');
           $route.reload();
         }
     }
@@ -63,6 +60,7 @@
     $scope.clear = function(){
       $scope.searchInput = '';
     };
+
     //force users to sign in if they click My List or Settings
     $scope.alert = function(){
       $window.alert("You need to Log in to use this feature");
@@ -78,9 +76,7 @@
           if(user !== null){  
             dbTglFactory.getDBTgl(user)
             .then((data)=>{
-              // console.log('BACK from PRomise data.toggleSettings', data.toggleSettings);
               let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
-              // console.log('dbTglinfo', dbTglinfo);
               let numberOfCalls = dbTglinfo.length;
               // get search input
               searchInput = $scope.searchInput;
@@ -91,7 +87,6 @@
             });
           } else{          
             $window.alert("You need to Log in to use this feature");
-            // loginAlrtCtrl
           }
         });
       } 

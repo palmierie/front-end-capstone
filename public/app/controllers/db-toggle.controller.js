@@ -5,12 +5,9 @@
     let user = userFactory.getCurrentUser();
     let changedUserObj = {};
 
-    // console.log('WHAT IS TE USERRRR', user);
-    
     function getUserDBSettings(){
       dbTglFactory.getDBTgl(user)
       .then((userObj)=>{
-        // console.log('userObj', userObj);
         $scope.data = {
           dbiTunes: userObj.toggleSettings.iTunes,
           dbBeatport: userObj.toggleSettings.Beatport,
@@ -22,7 +19,6 @@
     }
 
     $scope.updateFB = function(){
-      //console.log('switch happened');
       changedUserObj = {
                   displayName: changedUserObj.displayName,
                   id: changedUserObj.id,
@@ -32,10 +28,7 @@
                           Beatport: $scope.data.dbBeatport,
                           HeadlinerMusicClub: $scope.data.dbHeadlinerMusicClub
                         }
-      };
-      // console.log('changeUserObj switch', changedUserObj);
-      //console.log('changeUserObj ID', changedUserObj.id);
-      
+      };      
       dbTglFactory.changeDBTgl(changedUserObj.id, changedUserObj);
     };
 
