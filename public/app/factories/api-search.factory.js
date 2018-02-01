@@ -45,7 +45,9 @@
     this.searchBeatport = function(searchInput){
       return $q((resolve, reject)=>{
         var p1 = searchBeatportSongs(searchInput);
-        var p2 = searchBeatportArtists(searchInput);
+        // var p2 = searchBeatportArtists(searchInput);
+        // RESET TO THIS ^ WHEN DONE TESTING
+        var p2 = [];
 
         Promise.all([p1,p2])
           .then((arraySongObj)=>{
@@ -162,22 +164,31 @@
           let string4 = `{${string3}}`;
           let jsonObj = JSON.parse(string4);
           let tracksObjArr = jsonObj.tracks;
-      
-          for (var i = 0; i < tracksObjArr.length; i++) {
-              let selectedObj = {};
-              let artistNames = [];
-              for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
-                artistNames.push(tracksObjArr[i].artists[k].name);
-              }
-              selectedObj.artistName = artistNames.join(', ');
-              selectedObj.trackCensoredName = tracksObjArr[i].title;
-              selectedObj.trackLength = tracksObjArr[i].duration.minutes;
-              selectedObj.releaseDate = tracksObjArr[i].date.released;
-              selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
-              selectedObj.database = "Beatport";
+          
+          console.log("U NEED TO STOP HERE DAWG ", tracksObjArr);
+          // if no results are found, array length will be 0 - return "no results found"
+          if (tracksObjArr.length !== 0){
+            for (var i = 0; i < tracksObjArr.length; i++) {
+                let selectedObj = {};
+                let artistNames = [];
+                for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
+                  artistNames.push(tracksObjArr[i].artists[k].name);
+                }
+                selectedObj.artistName = artistNames.join(', ');
+                selectedObj.trackCensoredName = tracksObjArr[i].title;
+                selectedObj.trackLength = tracksObjArr[i].duration.minutes;
+                selectedObj.releaseDate = tracksObjArr[i].date.released;
+                selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
+                selectedObj.database = "Beatport";
+  
+                songBeatportArray.push(selectedObj);
+            }
+          } else {
+            // enter code to show no songs found
 
-              songBeatportArray.push(selectedObj);
           }
+          
+      
           resolve(songBeatportArray);
         });
 
