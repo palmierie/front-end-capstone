@@ -1,15 +1,11 @@
 "use strict";
 
-// change app. to angular.
-
 angular.module("SongSearchApp", ["ngRoute", "ngMaterial", "ui.bootstrap"]);
 
 let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
-  // console.log("userFactory is", userFactory);
   userFactory.isAuthenticated()
   .then( (userExists) => {
     if(userExists){
-      // console.log("Authentication Success");
       resolve();
     }else {
 			console.log("Authentication reject");
@@ -18,7 +14,6 @@ let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
     }
   });
 });
-
 
 
 angular.module("SongSearchApp").config(($routeProvider) => {
