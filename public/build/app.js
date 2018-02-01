@@ -1,16 +1,12 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
-// change app. to angular.
-
 angular.module("SongSearchApp", ["ngRoute", "ngMaterial", "ui.bootstrap"]);
 
 let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
-  // console.log("userFactory is", userFactory);
   userFactory.isAuthenticated()
   .then( (userExists) => {
     if(userExists){
-      // console.log("Authentication Success");
       resolve();
     }else {
 			console.log("Authentication reject");
@@ -19,7 +15,6 @@ let isAuth = (userFactory) => new Promise ( (resolve, reject) => {
     }
   });
 });
-
 
 
 angular.module("SongSearchApp").config(($routeProvider) => {
@@ -427,8 +422,6 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 
 	var userCtrl = function ($scope, $window, userFactory, $location, dbTglFactory) {
 
-		// console.log("userCtrl loaded");
-
 		// Account login creds received for current users:
 		$scope.account = {
 			email: "",
@@ -446,53 +439,16 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 
 		// When Register button is clicked, run register function to create new user in Firebase using existing user credentials provided
 		$scope.register = () => {
-			userFactory.register({
-				email: $scope.newAccount.email,
-				password: $scope.newAccount.password
-			})
-			.then((userData) => {
-				//Immediately log them in
-				userFactory.logIn($scope.newAccount)
-				.then((newaccount) => {
-					let name = $scope.displayName;
-					//Update profile using the name they provided
-					userFactory.updateDisplayName(name);
-				})
-				.then((whatever) => {
-					addUser();
-				})
-				.catch((error) => {
-					console.log("error updating display name", error);
-				});
-			});
+			registerUser();
 		};
-
 		// When enter pressed in Register password, run register function to create new user in Firebase using existing user credentials provided
 		$scope.registerEnter = (keyEvent)=>{
-			userFactory.register({
-				email: $scope.newAccount.email,
-				password: $scope.newAccount.password
-			})
-			.then((userData) => {
-				//Immediately log them in
-				userFactory.logIn($scope.newAccount)
-				.then((newaccount) => {
-					let name = $scope.displayName;
-					//Update profile using the name they provided
-					userFactory.updateDisplayName(name);
-				})
-				.then((whatever) => {
-					addUser();
-				})
-				.catch((error) => {
-					console.log("error updating display name", error);
-				});
-			});
+			if(keyEvent.which === 13){
+				registerUser();
+			}
 		};
-		
 		// When login button is clicked, run loginInUser function to log in using existing user credentials provided
 		$scope.login = () => {
-			
 			logInUser($scope.account);
 		};
 		// When enter pressed in password, run loginInUser function to log in using existing user credentials provided
@@ -501,15 +457,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 				logInUser($scope.account);
 			}
 		};
-
-		// Utility login function that can log in existing user, or newly registered user after registering
-		function logInUser(userCreds) {
-			userFactory.logIn(userCreds)
-			.then( () => {
-				$window.location.href = "#!/";
-			});
-		}
-
+		
 		firebase.auth().onAuthStateChanged(function(user) {
 			if (user) {
 				$scope.isLoggedIn = true;
@@ -519,7 +467,8 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 				$window.location.href = "#!/login";
 			}
 		});
-
+		
+		// Log in user via Google SignIn
 		$scope.loginGoogle = () => {
 			userFactory.authWithProvider()
 			.then((result) => {
@@ -534,6 +483,40 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 				console.log("error with google login", error); 
 			});
 		};
+		
+		// Utility login function that can log in existing user
+		function logInUser(userCreds) {
+			userFactory.logIn(userCreds)
+			.then( () => {
+				$window.location.href = "#!/";
+			});
+		}
+
+		// Register User - Call register function in userFactory
+		function registerUser() {
+			userFactory.register({
+				email: $scope.newAccount.email,
+				password: $scope.newAccount.password
+			})
+			.then((userData) => {
+				// any error registering will return the userData as undefined -- if register is successfull then log in and update User Profile Name
+				if (userData !== undefined ){
+					//Immediately log them in
+					userFactory.logIn($scope.newAccount)
+					.then((newaccount) => {
+						let name = $scope.displayName;
+						//Update profile using the name they provided
+						userFactory.updateDisplayName(name);
+					})
+					.then(() => {
+						addUser();
+					})
+					.catch((error) => {
+						console.log("error updating display name", error);
+					});
+				}
+			});
+		}
 
 		// Checks if user exists in firebase, and if not, adds them.
 		function addUser(){
@@ -1072,10 +1055,11 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 
     const register = function(userObj){
       return firebase.auth().createUserWithEmailAndPassword(userObj.email, userObj.password)
-      .catch(function(error){
+      .catch((error)=>{
         let errorCode = error.code;
         let errorMessage = error.message;
-        console.log("error", errorCode, errorMessage);
+        console.log("error registering ", errorCode, errorMessage);
+        alert(`Error Registering: ${errorCode} : ${errorMessage}`);
       });
 
     };
@@ -1089,12 +1073,12 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       });
     };
 
-  /* The three functions below are used in sequence to:
-  1. Get the current logged in user from the auth side of FB,
-  2. Check and see if that user already exists in our Users collection, and if not,
-  3. Add them to our Users collection */
+    /* The three functions below are used in sequence to:
+    1. Get the current logged in user from the auth side of FB,
+    2. Check and see if that user already exists in our Users collection, and if not,
+    3. Add them to our Users collection */
 
-  // Gets the current user from the **Authentication/Users** section of Firebase (not our db section)
+    // Gets the current user from the **Authentication/Users** section of Firebase (not our db section)
     const getFBCurrentUser = function () {
       return new Promise ((resolve, reject) => {
         firebase.auth().onAuthStateChanged( (user) => {
@@ -1134,7 +1118,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       });
     };
 
-    // Adds a user to Firebase Users collection.  Expects a preformed user object that gets made in getFBCurrentUser.
+    // Adds a user to Firebase Users collection.  Expects a preformed user object.
     const addUserToFirebase = function(userObj){
         let newObj = JSON.stringify(userObj);
         return $http.post(`${FBCreds.databaseURL}/users.json`, newObj)
@@ -1143,12 +1127,11 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         }, (error) => {
             let errorCode = error.code;
             let errorMessage = error.message;
-            console.log("error", errorCode, errorMessage);
+            console.log("error adding user to firebase database ", errorCode, errorMessage);
         });
     };
 
     const isAuthenticated = function (){
-      // console.log("userFactory: isAuthenticated");
       return new Promise ( (resolve, reject) => {
         firebase.auth().onAuthStateChanged( (user) => {
           if (user){
