@@ -1,5 +1,11 @@
-<div ng-show="!resultsDone"><md-progress-linear md-mode="indeterminate"></md-progress-linear></div>
-<div ng-show="resultsDone">
+<div ng-show="!resultsDone && !pageRefresh"><md-progress-linear md-mode="indeterminate"></md-progress-linear></div>
+<div ng-show="!resultsDone && pageRefresh">
+    <div class="row list-title-custom"> <h2>^<br>Search By Song or Artist</h2></div>
+</div>
+<div ng-show="resultsDone && noResults">
+    <div class="row list-title-custom"> <h2>No Songs Were Found</h2></div>
+</div>
+<div ng-show="resultsDone && !noResults">
   <div class="row list-title-custom"> <h2>Search Result</h2></div>
   <div class="row results-width">
     <table class="table table-sm table-striped table-hover">

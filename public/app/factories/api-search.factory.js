@@ -3,28 +3,42 @@
 
   var apiSearchService = function($q, $http, $location){
 
+    // master array that is to be displayed
     this.arraySongObjFinal = [];
-    //collects all arrays from all functions
-    let tempArray = [];
 
-    //Toggle to true when to display results
+    //collects all arrays from all functions - to be reset after searches are complete (from nav controller)
+    let tempArray = [];
+    // reset tempArray
+    this.clearTempArray = function(){
+      tempArray = [];
+    };
+
+    //Toggle to true when to display results - to be reset to false after searches are complete (from search controller)
     this.resultsDone = false;
-    
+    // reset resultsDone boolean
+    this.initResultsDone = function(){
+      this.resultsDone = false;
+    };
+
+    //Toggle to false when  -- FINISH
+    this.pageRefresh = true;
+    this.changePageRefreshBoolean = function(){
+      this.pageRefresh = false;
+    };
+    this.initPageRefreshBoolean = function(){
+        this.pageRefresh = true;
+    };
+
+
     //resolves that happened
     let numberOfResolves = 0;
-    
-    //number of calls
+    //number of calls init
     let numberOfCalls = null;
-    
-    //number of Calls to be made
+    //sets number of calls to be made
     this.numberOfCalls = function(number){
       numberOfCalls = number;
     };
     
-    this.initResultsDone = function(){
-      this.resultsDone = false;
-    };
-  
     //combines iTunes Search for Artist and Track Title
     this.searchiTunes = function(searchInput){
       return $q((resolve, reject)=>{
@@ -48,28 +62,28 @@
         var p2 = searchBeatportArtists(searchInput);
 
         Promise.all([p1,p2])
-          .then((arraySongObj)=>{
-            let flattenedArray = [].concat.apply([],arraySongObj);
-            ++numberOfResolves;
-            this.songArrayFunct(flattenedArray);
-            resolve();
-          });
+        .then((arraySongObj)=>{
+          let flattenedArray = [].concat.apply([],arraySongObj);
+          ++numberOfResolves;
+          this.songArrayFunct(flattenedArray);
+          resolve();
         });
-      };
+      });
+    };
+    
     //combines results from all arrays
     this.songArrayFunct = function(arraySongObj){
       tempArray.push(arraySongObj);
       this.arraySongObjFinal = [].concat.apply([],tempArray);
-      this.resultsDone = numberOfCalls===numberOfResolves ? true : false;
+      // sets resultsDone boolean to true if numberOfCalls number matches the numberOfResolves number
+      this.resultsDone = numberOfCalls === numberOfResolves ? true : false;
       if (this.resultsDone === true){
         numberOfResolves = 0;
       }
       return this.arraySongObjFinal;
     };
     
-    this.clearTempArray = function(){
-      tempArray = [];
-    };
+   
 
     // convert times for iTunes return data
     function convertTrackTimeMilliseconds(trackInMilliseconds) {
