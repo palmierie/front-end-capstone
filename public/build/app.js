@@ -242,8 +242,62 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     .then((x)=>{
       user = userFactory.getCurrentUser();
     });
+    //clear search input when clicked on
+    $scope.clear = function(){
+      $scope.searchInput = '';
+    };
+    //force users to sign in if they click My List or Settings
+    $scope.alert = function(){
+      $window.alert("You need to Log in to use this feature");
+    };
     
+    $scope.login = () =>{
+      $location.url('/login');
+    };
+
+    $scope.logout = () => {
+      userFactory.logOut();
+    };
+    
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        $scope.isLoggedIn = true;
+        $scope.$apply();
+      } else {
+        $scope.isLoggedIn = false;
+      }
+    });
+
+    $scope.searchFunct = function(keyEvent){
+      if(keyEvent.which === 13){
+        //authenticate user or else getCurrentUser is null
+        userFactory.isAuthenticated()
+        .then((x)=>{
+          user = userFactory.getCurrentUser();
+          //get db Toggle Info if user is logged in
+          if(user !== null){  
+            dbTglFactory.getDBTgl(user)
+            .then((data)=>{
+              let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
+              let numberOfCalls = dbTglinfo.length;
+              // get search input
+              searchInput = $scope.searchInput;
+              $route.reload();
+              // perform Search passing Search input, db toggle info, and number of DBs
+              searchDBs(dbTglinfo, searchInput, numberOfCalls);
+            });
+          } else{          
+            $window.alert("You need to Log in to use this feature");
+          }
+        });
+      } 
+    };
+
+    // search the correct databases
     const searchDBs = function(dbToggleInfoArray, searchInput, numberOfCalls){
+      //toggle page refresh variable to false to disable loading bar  -- works alongside resultsDone boolean in apiSearchService
+      apiSearchService.changePageRefreshBoolean();
+      // number of calls to be made -- determines when promise.all will be completed and page can refresh
       apiSearchService.numberOfCalls(numberOfCalls);
       let i = 0;
       //take dbToggleInfoArray and select appropriate db functions
@@ -279,66 +333,15 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         }
         
       });
+      // when all databases have been searched, the route will reload and display the results
       function locationRefresh(){
         if (numberOfCalls === i ){
           $route.reload();
         }
-    }
+      }
       // initialize tempArray on service factory for new input
       apiSearchService.clearTempArray();
     };
-    
-    //clear search input when clicked on
-    $scope.clear = function(){
-      $scope.searchInput = '';
-    };
-
-    //force users to sign in if they click My List or Settings
-    $scope.alert = function(){
-      $window.alert("You need to Log in to use this feature");
-    };
-
-    $scope.searchFunct = function(keyEvent){
-      if(keyEvent.which === 13){
-        //authenticate user or else getCurrentUser is null
-        userFactory.isAuthenticated()
-        .then((x)=>{
-          user = userFactory.getCurrentUser();
-          //get db Toggle Info
-          if(user !== null){  
-            dbTglFactory.getDBTgl(user)
-            .then((data)=>{
-              let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
-              let numberOfCalls = dbTglinfo.length;
-              // get search input
-              searchInput = $scope.searchInput;
-
-              $route.reload();
-              // perform Search passing Search input and db toggle info
-              searchDBs(dbTglinfo, searchInput, numberOfCalls);
-            });
-          } else{          
-            $window.alert("You need to Log in to use this feature");
-          }
-        });
-      } 
-    };
-
-    $scope.login = () =>{
-      $location.url('/login');
-    };
-    $scope.logout = () => {
-          userFactory.logOut();
-        };
-    
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        $scope.isLoggedIn = true;
-        $scope.$apply();
-      } else {
-        $scope.isLoggedIn = false;
-      }
-    });     
 
   };
 
@@ -358,38 +361,31 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     .then((x)=>{
       user = userFactory.getCurrentUser();
     });
-
+    // accesses apiSearchService for displaying songs in array
     $scope.apiSearchService = apiSearchService;
-    
+    // changes view from loading bar to results array
     $scope.resultsDone = apiSearchService.resultsDone;
-  
     apiSearchService.initResultsDone();
 
-    function buildPatchObject(savedObj){
-      userFactory.getCurrentUserFullObj(user)
-      .then((userObj)=>{
-        let patchObj = userObj;
-        // add song to myList array of objects
-        let newMyListArray = []; 
-        newMyListArray.push(savedObj);
-        // check if myList has any songs in it, if so, add to list array
-        if (patchObj.myList !== undefined){
-          newMyListArray.push(patchObj.myList);
-        }
-        let flattenedArray = [].concat.apply([], newMyListArray);
-        patchObj.myList = flattenedArray;
-        
-        myListFactory.patchMyList(userObj.id, patchObj);
-      });
+    // if page is refreshed don't show loading bar
+    $scope.pageRefresh = apiSearchService.pageRefresh;
+    apiSearchService.initPageRefreshBoolean();
+    
+
+    // when no songs are found, display "no songs found"
+    $scope.noResults = false;
+    if (apiSearchService.arraySongObjFinal.length === 0){
+      $scope.noResults = true;
     }
+
     //sort List
     $scope.sort = function(keyname){
       $scope.sortKey = keyname;  //set the sortKey to parameter passed in
       $scope.reverse = !$scope.reverse;  //toggle true or false
     };
-    
-    $scope.saveFunction = function(event){
 
+    // when save button is clicked, create song ID, and send DOM song info to buildSongObject to build song obj and save to database
+    $scope.saveFunction = function(event){
       let songDiv = event.currentTarget.parentElement.parentElement;
       let saveObj = {};
       let newTrackName = '';
@@ -409,6 +405,25 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         buildPatchObject(saveObj);
       });
     };
+
+    // build song object and save in database
+    function buildPatchObject(savedObj){
+      userFactory.getCurrentUserFullObj(user)
+      .then((userObj)=>{
+        let patchObj = userObj;
+        // add song to myList array of objects
+        let newMyListArray = [];
+        newMyListArray.push(savedObj);
+        // check if myList has any songs in it, if so, add to list array
+        if (patchObj.myList !== undefined){
+          newMyListArray.push(patchObj.myList);
+        }
+        let flattenedArray = [].concat.apply([], newMyListArray);
+        patchObj.myList = flattenedArray;
+        
+        myListFactory.patchMyList(userObj.id, patchObj);
+      });
+    }
 
   };
 
@@ -571,28 +586,42 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 
   var apiSearchService = function($q, $http, $location){
 
+    // master array that is to be displayed
     this.arraySongObjFinal = [];
-    //collects all arrays from all functions
-    let tempArray = [];
 
-    //Toggle to true when to display results
+    //collects all arrays from all functions - to be reset after searches are complete (from nav controller)
+    let tempArray = [];
+    // reset tempArray
+    this.clearTempArray = function(){
+      tempArray = [];
+    };
+
+    //Toggle to true when to display results - to be reset to false after searches are complete (from search controller)
     this.resultsDone = false;
-    
+    // reset resultsDone boolean
+    this.initResultsDone = function(){
+      this.resultsDone = false;
+    };
+
+    //Toggle to false when  -- FINISH
+    this.pageRefresh = true;
+    this.changePageRefreshBoolean = function(){
+      this.pageRefresh = false;
+    };
+    this.initPageRefreshBoolean = function(){
+        this.pageRefresh = true;
+    };
+
+
     //resolves that happened
     let numberOfResolves = 0;
-    
-    //number of calls
+    //number of calls init
     let numberOfCalls = null;
-    
-    //number of Calls to be made
+    //sets number of calls to be made
     this.numberOfCalls = function(number){
       numberOfCalls = number;
     };
     
-    this.initResultsDone = function(){
-      this.resultsDone = false;
-    };
-  
     //combines iTunes Search for Artist and Track Title
     this.searchiTunes = function(searchInput){
       return $q((resolve, reject)=>{
@@ -616,28 +645,28 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         var p2 = searchBeatportArtists(searchInput);
 
         Promise.all([p1,p2])
-          .then((arraySongObj)=>{
-            let flattenedArray = [].concat.apply([],arraySongObj);
-            ++numberOfResolves;
-            this.songArrayFunct(flattenedArray);
-            resolve();
-          });
+        .then((arraySongObj)=>{
+          let flattenedArray = [].concat.apply([],arraySongObj);
+          ++numberOfResolves;
+          this.songArrayFunct(flattenedArray);
+          resolve();
         });
-      };
+      });
+    };
+    
     //combines results from all arrays
     this.songArrayFunct = function(arraySongObj){
       tempArray.push(arraySongObj);
       this.arraySongObjFinal = [].concat.apply([],tempArray);
-      this.resultsDone = numberOfCalls===numberOfResolves ? true : false;
+      // sets resultsDone boolean to true if numberOfCalls number matches the numberOfResolves number
+      this.resultsDone = numberOfCalls === numberOfResolves ? true : false;
       if (this.resultsDone === true){
         numberOfResolves = 0;
       }
       return this.arraySongObjFinal;
     };
     
-    this.clearTempArray = function(){
-      tempArray = [];
-    };
+   
 
     // convert times for iTunes return data
     function convertTrackTimeMilliseconds(trackInMilliseconds) {
