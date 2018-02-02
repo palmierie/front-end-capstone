@@ -1,32 +1,38 @@
-<div class="row list-title-custom"><h2>My List</h2></div>
-<div class="row results-width">
-  <table class="table table-sm table-striped table-hover">
-    <thead>
-        <th ng-click="sort('artistName')">Artist<i class="fa fa-sort" ng-show="sortKey=='artistName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-        </th>
-        <th ng-click="sort('trackName')">Track<i class="fa fa-sort" ng-show="sortKey=='trackName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-        </th>
-        <th>Length</th>
-        <th ng-click="sort('releaseDate')">Release Date<i class="fa fa-sort" ng-show="sortKey=='releaseDate'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-        </th>
-        <th ng-click="sort('database')"> Database<i class="fa fa-sort" ng-show="sortKey=='database'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
-        </th>
-      <th>Buy/DL</th>
-      <th>Delete</th>
-    </thead>
-    <tbody>
-      <tr class="song-object" user-song-id="{{songObj.id}}" ng-repeat="songObj in arraySongObj | orderBy:sortKey:reverse">
-        <td class="artist-name">{{songObj.artistName}}</td>
-        <td class="track-name">{{songObj.trackName}}</td>
-        <td class="track-length">{{songObj.trackLength}}</td>
-        <td class="release-date">{{songObj.releaseDate}}</td>
-        <td class="song-database">{{songObj.database}}</td>
-        <td class="buy-url"><a ng-href="{{songObj.trackViewUrl}}" target="_blank">Buy</a></td>
-        <td><a href="#!/my-list" ng-click="deleteFunction($event)">Delete</a></td>
-      </tr>
-    </tbody>
-  </table>
+<div ng-show="myListPlaylistEmpty">
+  <div class="row">
+    <div class="col-4 text-center mx-auto my-5">
+      <h3>Click Save while on Search Results to add Songs to My List</h3>
+    </div>
+  </div>
 </div>
-<div class="row list-title-custom fixed-bottom">
-    <p>&#169; 2017 <a href="http://ericpalmieri.io/">ericpalmieri.io</a></p>
+<div ng-show="!myListPlaylistEmpty">
+  <div class="row list-title-custom"><h2>My List</h2></div>
+  <div class="row results-width">
+    <table class="table table-sm table-striped table-hover">
+      <thead>
+          <th ng-click="sort('artistName')">Artist<i class="fa fa-sort" ng-show="sortKey=='artistName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+          </th>
+          <th ng-click="sort('trackName')">Track<i class="fa fa-sort" ng-show="sortKey=='trackName'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+          </th>
+          <th>Length</th>
+          <th ng-click="sort('releaseDate')">Release Date<i class="fa fa-sort" ng-show="sortKey=='releaseDate'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+          </th>
+          <th ng-click="sort('database')"> Database<i class="fa fa-sort" ng-show="sortKey=='database'" ng-class="{'fa fa-sort-desc':reverse,'fa fa-sort-asc':!reverse}" aria-hidden="true"></i>
+          </th>
+        <th>Buy/DL</th>
+        <th>Delete</th>
+      </thead>
+      <tbody>
+        <tr class="song-object" user-song-id="{{songObj.id}}" ng-repeat="songObj in arraySongObj | orderBy:sortKey:reverse">
+          <td class="artist-name">{{songObj.artistName}}</td>
+          <td class="track-name">{{songObj.trackName}}</td>
+          <td class="track-length">{{songObj.trackLength}}</td>
+          <td class="release-date">{{songObj.releaseDate}}</td>
+          <td class="song-database">{{songObj.database}}</td>
+          <td class="buy-url"><a ng-href="{{songObj.trackViewUrl}}" target="_blank">Buy</a></td>
+          <td><a href="#!/my-list" ng-click="deleteFunction($event)">Delete</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
