@@ -707,7 +707,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
           reject(error);
         });
       });
-    } // End function searchiTunesSongs
+    }
 
     function searchiTunesArtists(search){
       var songArtistSearchiTunesArray = [];
@@ -797,7 +797,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         });
 
       });
-    } // End function searchBeatportSongs
+    }
 
     // Gets Artist Link URL from Beatport Search
     // returns: Promise
@@ -841,7 +841,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
           resolve(artistLink);
         });
       });
-    } // End function searchBpArtistLink
+    }
 
     // Searches Beatport by artist
     // returns: resolved array of Objects
@@ -869,14 +869,16 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
           }
         });
       });
-    } // End function searchBeatportArtists
-    
+    }
+
     this.searchHeadlinerMusicClub = function(search){
       return $q((resolve, reject)=>{
         $http.get(`https://headlinermusicclub.com/?s=${search}&post_type=audio`)
-        .then((result)=>{
-        
-          let dataObj = $('<div>').html(result.data)[0].getElementsByClassName('audio_list')[0];
+        .then((data)=>{
+          // Get rid of requests for images
+          let result = cancelImageRequests(data);
+
+          let dataObj = $('<div>').html(result)[0].getElementsByClassName('audio_list')[0];
           let artistDivArr = dataObj.getElementsByClassName('artist-name');
           let songDivArr = dataObj.getElementsByClassName('song-name');
           let releaseDateDivArr = dataObj.getElementsByClassName('add-date');
