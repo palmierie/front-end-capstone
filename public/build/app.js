@@ -641,8 +641,9 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     //combines Beatport Search for Artist and Track Title
     this.searchBeatport = function(searchInput){
       return $q((resolve, reject)=>{
-        // var p1 = searchBeatportSongs(searchInput);
-        var p1 = [];
+        // TURN THESE ON AND OFF DURING TESTING
+        var p1 = searchBeatportSongs(searchInput);
+        // var p1 = [];
         var p2 = searchBeatportArtists(searchInput);
         // var p2 = [];
 
@@ -747,6 +748,13 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         
         $http.get(`https://www.beatport.com/search/tracks?q=${search}&per-page=50`)
         .then((result)=>{
+
+          // // WORK STARTS HERE 
+          // let thang = $("<div>").html(result.data).text();
+          // let newthang = $(thang).find("script");
+          // console.log("check ma thang", newthang);
+          // // WORK STARTS HERE ^
+
           //slice to <script id="data-objects">
           let start1 = result.data.indexOf("data-objects");
           let string1 = result.data.slice(start1);      
