@@ -149,7 +149,14 @@
           reject(error);
         });
       });
-    } // End function searchiTunesArtists
+    }
+
+    // Bypass CORS Policy  - uses cors-anywhere herokuapp
+    function bypassCORS(siteUrl) {
+      let proxy = 'https://cors-anywhere.herokuapp.com/';
+      let url = `${proxy}${siteUrl}`;
+      return url;
+    }
 
     // BEATPORT - create JSON object and return tracks array for beatport search functions
     // returns array of objects
@@ -197,10 +204,12 @@
     // returns: Promise
     function searchBeatportSongs(search){
       return $q((resolve, reject)=>{
-    
+        // Get around CORS Policy
+        var siteUrl = `https://www.beatport.com/search/tracks?q=${search}&per-page=50`;
+        var url = bypassCORS(siteUrl);
         var songBeatportArray = [];
       
-        $http.get(`https://www.beatport.com/search/tracks?q=${search}&per-page=50`)
+        $http.get(`${url}`)
         .then((data)=>{
           // Get rid of requests for images
           let result = cancelImageRequests(data);
@@ -220,13 +229,11 @@
     // returns: Promise
     function searchBpArtistLink(search){
       return $q((resolve, reject)=>{
-        // var headers = {
-        // 	'Access-Control-Allow-Origin' : '*'
-        //  // 'Access-Control-Allow-Methods' : 'GET',
-        //  // "cache-control": "no-cache",
-        //  // "postman-token": "00a2f541-2236-a387-e9a6-c2329912a03f"
-        // };
-        $http.get(`https://www.beatport.com/search/?q=${search}`)
+        // Get around CORS Policy
+        var siteUrl = `https://www.beatport.com/search/?q=${search}`;
+        var url = bypassCORS(siteUrl);
+
+        $http.get(`${url}`)
         .then((data)=>{
           // Get rid of requests for images
           let result = cancelImageRequests(data);
@@ -269,7 +276,10 @@
           var songBeatportArray = [];
           // if there artist is artist is found, then search for tracks
           if(artistLink){
-            $http.get(`https://www.beatport.com${artistLink}/tracks?per-page=50`)
+            // Get around CORS Policy
+            var siteUrl = `https://www.beatport.com${artistLink}/tracks?per-page=50`;
+            var url = bypassCORS(siteUrl);
+            $http.get(`${url}`)
             .then((data)=>{
               // Get rid of requests for images
               let result = cancelImageRequests(data);
@@ -290,7 +300,10 @@
 
     this.searchHeadlinerMusicClub = function(search){
       return $q((resolve, reject)=>{
-        $http.get(`https://headlinermusicclub.com/?s=${search}&post_type=audio`)
+        // Get around CORS Policy
+        var siteUrl = `https://headlinermusicclub.com/?s=${search}&post_type=audio`;
+        var url = bypassCORS(siteUrl);
+        $http.get(`${url}`)
         .then((data)=>{
           // Get rid of requests for images
           let result = cancelImageRequests(data);
@@ -364,7 +377,7 @@
           resolve();
         });
       });
-    };  //End Function searchHeadlinerMusicClub
+    };
 
   };
   

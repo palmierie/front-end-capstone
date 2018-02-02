@@ -93,4 +93,7 @@ md-switch.md-default-theme.md-checked .md-ink-ripple, .md-ink-ripple {
   border: 5px solid #DADBC6;
   padding: 2em; }
 
+a, a:visited, a:hover, a:not(.md-button) {
+  color: #DADBC6; }
+
 /*# sourceMappingURL=main.css.map */
