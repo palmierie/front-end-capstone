@@ -242,8 +242,62 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     .then((x)=>{
       user = userFactory.getCurrentUser();
     });
+    //clear search input when clicked on
+    $scope.clear = function(){
+      $scope.searchInput = '';
+    };
+    //force users to sign in if they click My List or Settings
+    $scope.alert = function(){
+      $window.alert("You need to Log in to use this feature");
+    };
     
+    $scope.login = () =>{
+      $location.url('/login');
+    };
+
+    $scope.logout = () => {
+      userFactory.logOut();
+    };
+    
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        $scope.isLoggedIn = true;
+        $scope.$apply();
+      } else {
+        $scope.isLoggedIn = false;
+      }
+    });
+
+    $scope.searchFunct = function(keyEvent){
+      if(keyEvent.which === 13){
+        //authenticate user or else getCurrentUser is null
+        userFactory.isAuthenticated()
+        .then((x)=>{
+          user = userFactory.getCurrentUser();
+          //get db Toggle Info if user is logged in
+          if(user !== null){  
+            dbTglFactory.getDBTgl(user)
+            .then((data)=>{
+              let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
+              let numberOfCalls = dbTglinfo.length;
+              // get search input
+              searchInput = $scope.searchInput;
+              $route.reload();
+              // perform Search passing Search input, db toggle info, and number of DBs
+              searchDBs(dbTglinfo, searchInput, numberOfCalls);
+            });
+          } else{          
+            $window.alert("You need to Log in to use this feature");
+          }
+        });
+      } 
+    };
+
+    // search the correct databases
     const searchDBs = function(dbToggleInfoArray, searchInput, numberOfCalls){
+      //toggle page refresh variable to false to disable loading bar  -- works alongside resultsDone boolean in apiSearchService
+      apiSearchService.changePageRefreshBoolean();
+      // number of calls to be made -- determines when promise.all will be completed and page can refresh
       apiSearchService.numberOfCalls(numberOfCalls);
       let i = 0;
       //take dbToggleInfoArray and select appropriate db functions
@@ -279,66 +333,15 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         }
         
       });
+      // when all databases have been searched, the route will reload and display the results
       function locationRefresh(){
         if (numberOfCalls === i ){
           $route.reload();
         }
-    }
+      }
       // initialize tempArray on service factory for new input
       apiSearchService.clearTempArray();
     };
-    
-    //clear search input when clicked on
-    $scope.clear = function(){
-      $scope.searchInput = '';
-    };
-
-    //force users to sign in if they click My List or Settings
-    $scope.alert = function(){
-      $window.alert("You need to Log in to use this feature");
-    };
-
-    $scope.searchFunct = function(keyEvent){
-      if(keyEvent.which === 13){
-        //authenticate user or else getCurrentUser is null
-        userFactory.isAuthenticated()
-        .then((x)=>{
-          user = userFactory.getCurrentUser();
-          //get db Toggle Info
-          if(user !== null){  
-            dbTglFactory.getDBTgl(user)
-            .then((data)=>{
-              let dbTglinfo = Object.keys(data.toggleSettings).filter(key => data.toggleSettings[key] === true);
-              let numberOfCalls = dbTglinfo.length;
-              // get search input
-              searchInput = $scope.searchInput;
-
-              $route.reload();
-              // perform Search passing Search input and db toggle info
-              searchDBs(dbTglinfo, searchInput, numberOfCalls);
-            });
-          } else{          
-            $window.alert("You need to Log in to use this feature");
-          }
-        });
-      } 
-    };
-
-    $scope.login = () =>{
-      $location.url('/login');
-    };
-    $scope.logout = () => {
-          userFactory.logOut();
-        };
-    
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        $scope.isLoggedIn = true;
-        $scope.$apply();
-      } else {
-        $scope.isLoggedIn = false;
-      }
-    });     
 
   };
 
@@ -358,38 +361,31 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     .then((x)=>{
       user = userFactory.getCurrentUser();
     });
-
+    // accesses apiSearchService for displaying songs in array
     $scope.apiSearchService = apiSearchService;
-    
+    // changes view from loading bar to results array
     $scope.resultsDone = apiSearchService.resultsDone;
-  
     apiSearchService.initResultsDone();
 
-    function buildPatchObject(savedObj){
-      userFactory.getCurrentUserFullObj(user)
-      .then((userObj)=>{
-        let patchObj = userObj;
-        // add song to myList array of objects
-        let newMyListArray = []; 
-        newMyListArray.push(savedObj);
-        // check if myList has any songs in it, if so, add to list array
-        if (patchObj.myList !== undefined){
-          newMyListArray.push(patchObj.myList);
-        }
-        let flattenedArray = [].concat.apply([], newMyListArray);
-        patchObj.myList = flattenedArray;
-        
-        myListFactory.patchMyList(userObj.id, patchObj);
-      });
+    // if page is refreshed don't show loading bar
+    $scope.pageRefresh = apiSearchService.pageRefresh;
+    apiSearchService.initPageRefreshBoolean();
+    
+
+    // when no songs are found, display "no songs found"
+    $scope.noResults = false;
+    if (apiSearchService.arraySongObjFinal.length === 0){
+      $scope.noResults = true;
     }
+
     //sort List
     $scope.sort = function(keyname){
       $scope.sortKey = keyname;  //set the sortKey to parameter passed in
       $scope.reverse = !$scope.reverse;  //toggle true or false
     };
-    
-    $scope.saveFunction = function(event){
 
+    // when save button is clicked, create song ID, and send DOM song info to buildSongObject to build song obj and save to database
+    $scope.saveFunction = function(event){
       let songDiv = event.currentTarget.parentElement.parentElement;
       let saveObj = {};
       let newTrackName = '';
@@ -409,6 +405,25 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         buildPatchObject(saveObj);
       });
     };
+
+    // build song object and save in database
+    function buildPatchObject(savedObj){
+      userFactory.getCurrentUserFullObj(user)
+      .then((userObj)=>{
+        let patchObj = userObj;
+        // add song to myList array of objects
+        let newMyListArray = [];
+        newMyListArray.push(savedObj);
+        // check if myList has any songs in it, if so, add to list array
+        if (patchObj.myList !== undefined){
+          newMyListArray.push(patchObj.myList);
+        }
+        let flattenedArray = [].concat.apply([], newMyListArray);
+        patchObj.myList = flattenedArray;
+        
+        myListFactory.patchMyList(userObj.id, patchObj);
+      });
+    }
 
   };
 
@@ -571,28 +586,42 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
 
   var apiSearchService = function($q, $http, $location){
 
+    // master array that is to be displayed
     this.arraySongObjFinal = [];
-    //collects all arrays from all functions
-    let tempArray = [];
 
-    //Toggle to true when to display results
+    //collects all arrays from all functions - to be reset after searches are complete (from nav controller)
+    let tempArray = [];
+    // reset tempArray
+    this.clearTempArray = function(){
+      tempArray = [];
+    };
+
+    //Toggle to true when to display results - to be reset to false after searches are complete (from search controller)
     this.resultsDone = false;
-    
+    // reset resultsDone boolean
+    this.initResultsDone = function(){
+      this.resultsDone = false;
+    };
+
+    //Toggle to false when  -- FINISH
+    this.pageRefresh = true;
+    this.changePageRefreshBoolean = function(){
+      this.pageRefresh = false;
+    };
+    this.initPageRefreshBoolean = function(){
+        this.pageRefresh = true;
+    };
+
+
     //resolves that happened
     let numberOfResolves = 0;
-    
-    //number of calls
+    //number of calls init
     let numberOfCalls = null;
-    
-    //number of Calls to be made
+    //sets number of calls to be made
     this.numberOfCalls = function(number){
       numberOfCalls = number;
     };
     
-    this.initResultsDone = function(){
-      this.resultsDone = false;
-    };
-  
     //combines iTunes Search for Artist and Track Title
     this.searchiTunes = function(searchInput){
       return $q((resolve, reject)=>{
@@ -612,34 +641,34 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     //combines Beatport Search for Artist and Track Title
     this.searchBeatport = function(searchInput){
       return $q((resolve, reject)=>{
-        var p1 = searchBeatportSongs(searchInput);
-        // var p2 = searchBeatportArtists(searchInput);
-        // RESET TO THIS ^ WHEN DONE TESTING
-        var p2 = [];
+        // var p1 = searchBeatportSongs(searchInput);
+        var p1 = [];
+        var p2 = searchBeatportArtists(searchInput);
+        // var p2 = [];
 
         Promise.all([p1,p2])
-          .then((arraySongObj)=>{
-            let flattenedArray = [].concat.apply([],arraySongObj);
-            ++numberOfResolves;
-            this.songArrayFunct(flattenedArray);
-            resolve();
-          });
+        .then((arraySongObj)=>{
+          let flattenedArray = [].concat.apply([],arraySongObj);
+          ++numberOfResolves;
+          this.songArrayFunct(flattenedArray);
+          resolve();
         });
-      };
+      });
+    };
+    
     //combines results from all arrays
     this.songArrayFunct = function(arraySongObj){
       tempArray.push(arraySongObj);
       this.arraySongObjFinal = [].concat.apply([],tempArray);
-      this.resultsDone = numberOfCalls===numberOfResolves ? true : false;
+      // sets resultsDone boolean to true if numberOfCalls number matches the numberOfResolves number
+      this.resultsDone = numberOfCalls === numberOfResolves ? true : false;
       if (this.resultsDone === true){
         numberOfResolves = 0;
       }
       return this.arraySongObjFinal;
     };
     
-    this.clearTempArray = function(){
-      tempArray = [];
-    };
+   
 
     // convert times for iTunes return data
     function convertTrackTimeMilliseconds(trackInMilliseconds) {
@@ -661,21 +690,21 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       var songSearchiTunesArray = [];
       return $q((resolve, reject) => {
         $http.get(`https://itunes.apple.com/search?media=music&entity=song&attribute=songTerm&term=${search}&limit=25`)
-          .then((result) => {
-            let arrResult = result.data.results;
-          
-            for (var i = 0; i < arrResult.length; i++) {
-              let selectedObj = {};
-              selectedObj.artistName = arrResult[i].artistName;
-              selectedObj.trackCensoredName = arrResult[i].trackCensoredName;
-              selectedObj.trackLength = convertTrackTimeMilliseconds(arrResult[i].trackTimeMillis);
-              selectedObj.releaseDate = arrResult[i].releaseDate.slice(0,10);
-              selectedObj.trackViewUrl = arrResult[i].trackViewUrl;
-              selectedObj.database = "iTunes";
+        .then((result) => {
+          let arrResult = result.data.results;
+        
+          for (var i = 0; i < arrResult.length; i++) {
+            let selectedObj = {};
+            selectedObj.artistName = arrResult[i].artistName;
+            selectedObj.trackCensoredName = arrResult[i].trackCensoredName;
+            selectedObj.trackLength = convertTrackTimeMilliseconds(arrResult[i].trackTimeMillis);
+            selectedObj.releaseDate = arrResult[i].releaseDate.slice(0,10);
+            selectedObj.trackViewUrl = arrResult[i].trackViewUrl;
+            selectedObj.database = "iTunes";
 
-              songSearchiTunesArray.push(selectedObj);
-            }
-            resolve(songSearchiTunesArray);
+            songSearchiTunesArray.push(selectedObj);
+          }
+          resolve(songSearchiTunesArray);
         }).catch((error) => {
           reject(error);
         });
@@ -686,21 +715,21 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       var songArtistSearchiTunesArray = [];
       return $q((resolve, reject) => {
         $http.get(`https://itunes.apple.com/search?media=music&entity=song&attribute=artistTerm&term=${search}&limit=50`)
-          .then((result) => {
-            let arrResult = result.data.results;
+        .then((result) => {
+          let arrResult = result.data.results;
 
-            for (var i = 0; i < arrResult.length; i++) {
-              let selectedObj = {};
-              selectedObj.artistName = arrResult[i].artistName;
-              selectedObj.trackCensoredName = arrResult[i].trackCensoredName;
-              selectedObj.trackLength = convertTrackTimeMilliseconds(arrResult[i].trackTimeMillis);
-              selectedObj.releaseDate = arrResult[i].releaseDate.slice(0,10);
-              selectedObj.trackViewUrl = arrResult[i].trackViewUrl;
-              selectedObj.database = "iTunes";
+          for (var i = 0; i < arrResult.length; i++) {
+            let selectedObj = {};
+            selectedObj.artistName = arrResult[i].artistName;
+            selectedObj.trackCensoredName = arrResult[i].trackCensoredName;
+            selectedObj.trackLength = convertTrackTimeMilliseconds(arrResult[i].trackTimeMillis);
+            selectedObj.releaseDate = arrResult[i].releaseDate.slice(0,10);
+            selectedObj.trackViewUrl = arrResult[i].trackViewUrl;
+            selectedObj.database = "iTunes";
 
-              songArtistSearchiTunesArray.push(selectedObj);
-            }
-            resolve(songArtistSearchiTunesArray);
+            songArtistSearchiTunesArray.push(selectedObj);
+          }
+          resolve(songArtistSearchiTunesArray);
         }).catch((error) => {
           reject(error);
         });
@@ -732,34 +761,26 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
           let string4 = `{${string3}}`;
           let jsonObj = JSON.parse(string4);
           let tracksObjArr = jsonObj.tracks;
-          
-          console.log("U NEED TO STOP HERE DAWG ", tracksObjArr);
-          // if no results are found, array length will be 0 - return "no results found"
+          // if no results are found, array length will be 0 - return nothing
           if (tracksObjArr.length !== 0){
             for (var i = 0; i < tracksObjArr.length; i++) {
-                let selectedObj = {};
-                let artistNames = [];
-                for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
-                  artistNames.push(tracksObjArr[i].artists[k].name);
-                }
-                selectedObj.artistName = artistNames.join(', ');
-                selectedObj.trackCensoredName = tracksObjArr[i].title;
-                selectedObj.trackLength = tracksObjArr[i].duration.minutes;
-                selectedObj.releaseDate = tracksObjArr[i].date.released;
-                selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
-                selectedObj.database = "Beatport";
-  
-                songBeatportArray.push(selectedObj);
-            }
-          } else {
-            // enter code to show no songs found
+              let selectedObj = {};
+              let artistNames = [];
+              for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
+                artistNames.push(tracksObjArr[i].artists[k].name);
+              }
+              selectedObj.artistName = artistNames.join(', ');
+              selectedObj.trackCensoredName = tracksObjArr[i].title;
+              selectedObj.trackLength = tracksObjArr[i].duration.minutes;
+              selectedObj.releaseDate = tracksObjArr[i].date.released;
+              selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
+              selectedObj.database = "Beatport";
 
+              songBeatportArray.push(selectedObj);
+            }
           }
-          
-      
           resolve(songBeatportArray);
         });
-
 
       });
     } // End function searchBeatportSongs
@@ -772,18 +793,33 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         //  // "cache-control": "no-cache",
         //  // "postman-token": "00a2f541-2236-a387-e9a6-c2329912a03f"
         // };
-        var songBeatportArray = [];
-        let bpTrackUrl = 'https://www.beatport.com/track/';
-        
         $http.get(`https://www.beatport.com/search/?q=${search}`)
         .then((result)=>{
-          //slice to artist-gradient-overlay
-          let start0 = result.data.indexOf('a href="/artist');
-          let start1 = start0 + 8;
-          let end0 = result.data.indexOf("artist-gradient-overlay");
-          let end1 = end0 - 27;
-          let string1 = result.data.slice(start1, end1);
-          resolve(string1);
+          let artistLink = false;
+          //get artist link
+          let artistDiv = $("<div>").html(result.data)[0].getElementsByClassName('bucket artists')[0];
+          // if artist div exists then get artist link or else search for releases div
+          if(artistDiv!== undefined){
+            let artistListItem = $(artistDiv).find('li')[0];
+            artistLink = $(artistListItem).find('a').attr('href');
+          } else {
+            let releasesDiv = $("<div>").html(result.data)[0].getElementsByClassName('bucket releases')[0];
+            // if releases div exists then get artist link
+            if (releasesDiv !== undefined) {
+              let releaseArtistArr = $(releasesDiv).find('p.release-artists').children();
+              // loop through array of <a>'s and check if the <a> contains the search term
+              for (let i = 0; i < releaseArtistArr.length; i++) {
+                let aTag = $("<div>").html(releaseArtistArr[i])[0];
+                let text = $(aTag).find('a').text();
+                // if the search term is contained, get the artist link url and break the loop
+                if (search.toLowerCase().includes(text.toLowerCase())) {
+                  artistLink = $(aTag).find('a').attr('href');
+                  break;
+                }
+              }
+            }
+          }
+          resolve(artistLink);
         });
       });
     } // End function searchBpArtistLink
@@ -791,45 +827,50 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     function searchBeatportArtists(search){
       return $q((resolve, reject)=>{
         searchBpArtistLink(search)
-          .then((artistLink)=>{
-            var artistBeatportArray = [];
+        .then((artistLink)=>{
+          var artistBeatportArray = [];
+          // if there artist is artist is found, then search for tracks
+          if(artistLink){
             let bpTrackUrl = 'https://www.beatport.com/track/';
             
             $http.get(`https://www.beatport.com${artistLink}/tracks?per-page=50`)
-              .then((artistResult)=>{
-                // slice to <script id="data-objects">
-                let start1 = artistResult.data.indexOf("data-objects");
-                let string1 = artistResult.data.slice(start1);      
-                //slice to "tracks"
-                let start2 = string1.indexOf('"tracks"');
-                let string2 = string1.slice(start2);
-                
-                //end slice to window.Sliders
-                let end1 = string2.indexOf("window.Sliders");
-                let end2 = end1 - 12;
-                let string3 = string2.slice(0,end2);
-                //console.log('cut string3', string3);
-                let string4 = `{${string3}}`;
-                let jsonObj = JSON.parse(string4);
-                let tracksObjArr = jsonObj.tracks;
-                for (var i = 0; i < tracksObjArr.length; i++) {
-                  let selectedObj = {};
-                  let artistNames = [];
-                  for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
-                    artistNames.push(tracksObjArr[i].artists[k].name);
-                  }
-                  selectedObj.artistName = artistNames.join(', ');
-                  selectedObj.trackCensoredName = tracksObjArr[i].title;
-                  selectedObj.trackLength = tracksObjArr[i].duration.minutes;
-                  selectedObj.releaseDate = tracksObjArr[i].date.released;
-                  selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
-                  selectedObj.database = "Beatport";
-
-                  artistBeatportArray.push(selectedObj);
+            .then((artistResult)=>{
+              // slice to <script id="data-objects">
+              let start1 = artistResult.data.indexOf("data-objects");
+              let string1 = artistResult.data.slice(start1);      
+              //slice to "tracks"
+              let start2 = string1.indexOf('"tracks"');
+              let string2 = string1.slice(start2);
+              
+              //end slice to window.Sliders
+              let end1 = string2.indexOf("window.Sliders");
+              let end2 = end1 - 12;
+              let string3 = string2.slice(0,end2);
+              let string4 = `{${string3}}`;
+              let jsonObj = JSON.parse(string4);
+              let tracksObjArr = jsonObj.tracks;
+              for (var i = 0; i < tracksObjArr.length; i++) {
+                let selectedObj = {};
+                let artistNames = [];
+                for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
+                  artistNames.push(tracksObjArr[i].artists[k].name);
                 }
-                resolve(artistBeatportArray);
-              });
-          });
+                selectedObj.artistName = artistNames.join(', ');
+                selectedObj.trackCensoredName = tracksObjArr[i].title;
+                selectedObj.trackLength = tracksObjArr[i].duration.minutes;
+                selectedObj.releaseDate = tracksObjArr[i].date.released;
+                selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
+                selectedObj.database = "Beatport";
+
+                artistBeatportArray.push(selectedObj);
+              }
+              resolve(artistBeatportArray);
+            });
+          } else {
+            // empty array
+            resolve(artistBeatportArray);
+          }
+        });
       });
     } // End function searchBeatportArtists
     
