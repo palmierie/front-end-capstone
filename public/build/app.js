@@ -603,7 +603,7 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       this.resultsDone = false;
     };
 
-    //Toggle to false when  -- FINISH
+    //Toggle to false when page is loaded from navigation search
     this.pageRefresh = true;
     this.changePageRefreshBoolean = function(){
       this.pageRefresh = false;
@@ -641,11 +641,8 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
     //combines Beatport Search for Artist and Track Title
     this.searchBeatport = function(searchInput){
       return $q((resolve, reject)=>{
-        // TURN THESE ON AND OFF DURING TESTING
         var p1 = searchBeatportSongs(searchInput);
-        // var p1 = [];
         var p2 = searchBeatportArtists(searchInput);
-        // var p2 = [];
 
         Promise.all([p1,p2])
         .then((arraySongObj)=>{
@@ -737,6 +734,47 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       });
     } // End function searchiTunesArtists
 
+    // BEATPORT - create JSON object and return tracks array for beatport search functions
+    // returns array of objects
+    function beatportJSON(responseData) {
+      let resultDiv = $("<div>").html(responseData)[0];
+      let resultJsonDiv = $(resultDiv).find("#data-objects")[0];
+      let x =  $(resultJsonDiv).text();  // changes jQuery Html Script Element Object to string
+      // chops string to allow results to be parsed as valid JSON
+      let resultsForJsonObj = x.slice(x.indexOf('"tracks":'),(x.indexOf('window.Sliders') - 12));
+      let jsonObj = JSON.parse(`{${resultsForJsonObj}}`);
+      return jsonObj.tracks;
+    }
+
+    // BEATPORT - create array of objects for beatport search functions
+    // returns array of formatted objects
+    function beatportSongArrayBuilder(tracksArray) {
+      let returnArray = [];
+      let bpTrackUrl = 'https://www.beatport.com/track/';
+      for (var i = 0; i < tracksArray.length; i++) {
+        let selectedObj = {};
+        let artistNames = [];
+        for (var k = 0; k < tracksArray[i].artists.length; k++) {
+          artistNames.push(tracksArray[i].artists[k].name);
+        }
+        selectedObj.artistName = artistNames.join(', ');
+        selectedObj.trackCensoredName = tracksArray[i].title;
+        selectedObj.trackLength = tracksArray[i].duration.minutes;
+        selectedObj.releaseDate = tracksArray[i].date.released;
+        selectedObj.trackViewUrl = `${bpTrackUrl}${tracksArray[i].slug}/${tracksArray[i].id}`;
+        selectedObj.database = "Beatport";
+
+        returnArray.push(selectedObj);
+      }
+      return returnArray;
+    }
+
+    // BEATPORT - gets rid of image and SVG requests by page
+    // returns string with replaced img & svg links
+    function cancelImageRequests(rawData) {
+       return rawData.data.replace(/<img [^>]*src=['"]([^'"]+)[^>]*>/gi, function (match, capture) {return "<img no_load_src=\"" +capture+ "\" />";}).replace(/<use [^>]*>/gi, function (match, capture) {return "<use no_load_src=\"" +capture+ "\" />";});
+    }
+
     // Search for songs within Beatport
     // search (String): The search query
     // returns: Promise
@@ -744,48 +782,16 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       return $q((resolve, reject)=>{
     
         var songBeatportArray = [];
-        let bpTrackUrl = 'https://www.beatport.com/track/';
-        
+      
         $http.get(`https://www.beatport.com/search/tracks?q=${search}&per-page=50`)
-        .then((result)=>{
-
-          // // WORK STARTS HERE 
-          // let thang = $("<div>").html(result.data).text();
-          // let newthang = $(thang).find("script");
-          // console.log("check ma thang", newthang);
-          // // WORK STARTS HERE ^
-
-          //slice to <script id="data-objects">
-          let start1 = result.data.indexOf("data-objects");
-          let string1 = result.data.slice(start1);      
-          //slice to "tracks"
-          let start2 = string1.indexOf('"tracks"');
-          let string2 = string1.slice(start2);
-          
-          //end slice to window.Sliders
-          let end1 = string2.indexOf("window.Sliders");
-          let end2 = end1 - 12;
-          let string3 = string2.slice(0,end2);
-          let string4 = `{${string3}}`;
-          let jsonObj = JSON.parse(string4);
-          let tracksObjArr = jsonObj.tracks;
+        .then((data)=>{
+          // Get rid of requests for images
+          let result = cancelImageRequests(data);
+          //  chop & format data into JSON Object
+          let tracksObjArr = beatportJSON(result);
           // if no results are found, array length will be 0 - return nothing
           if (tracksObjArr.length !== 0){
-            for (var i = 0; i < tracksObjArr.length; i++) {
-              let selectedObj = {};
-              let artistNames = [];
-              for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
-                artistNames.push(tracksObjArr[i].artists[k].name);
-              }
-              selectedObj.artistName = artistNames.join(', ');
-              selectedObj.trackCensoredName = tracksObjArr[i].title;
-              selectedObj.trackLength = tracksObjArr[i].duration.minutes;
-              selectedObj.releaseDate = tracksObjArr[i].date.released;
-              selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
-              selectedObj.database = "Beatport";
-
-              songBeatportArray.push(selectedObj);
-            }
+            songBeatportArray = beatportSongArrayBuilder(tracksObjArr);
           }
           resolve(songBeatportArray);
         });
@@ -793,6 +799,8 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       });
     } // End function searchBeatportSongs
 
+    // Gets Artist Link URL from Beatport Search
+    // returns: Promise
     function searchBpArtistLink(search){
       return $q((resolve, reject)=>{
         // var headers = {
@@ -802,16 +810,19 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
         //  // "postman-token": "00a2f541-2236-a387-e9a6-c2329912a03f"
         // };
         $http.get(`https://www.beatport.com/search/?q=${search}`)
-        .then((result)=>{
+        .then((data)=>{
+          // Get rid of requests for images
+          let result = cancelImageRequests(data);
+
           let artistLink = false;
           //get artist link
-          let artistDiv = $("<div>").html(result.data)[0].getElementsByClassName('bucket artists')[0];
+          let artistDiv = $("<div>").html(result)[0].getElementsByClassName('bucket artists')[0];
           // if artist div exists then get artist link or else search for releases div
           if(artistDiv!== undefined){
             let artistListItem = $(artistDiv).find('li')[0];
             artistLink = $(artistListItem).find('a').attr('href');
           } else {
-            let releasesDiv = $("<div>").html(result.data)[0].getElementsByClassName('bucket releases')[0];
+            let releasesDiv = $("<div>").html(result)[0].getElementsByClassName('bucket releases')[0];
             // if releases div exists then get artist link
             if (releasesDiv !== undefined) {
               let releaseArtistArr = $(releasesDiv).find('p.release-artists').children();
@@ -832,51 +843,29 @@ angular.module("SongSearchApp").run(($location, FBCreds) => {
       });
     } // End function searchBpArtistLink
 
+    // Searches Beatport by artist
+    // returns: resolved array of Objects
     function searchBeatportArtists(search){
       return $q((resolve, reject)=>{
         searchBpArtistLink(search)
         .then((artistLink)=>{
-          var artistBeatportArray = [];
+          var songBeatportArray = [];
           // if there artist is artist is found, then search for tracks
           if(artistLink){
-            let bpTrackUrl = 'https://www.beatport.com/track/';
-            
             $http.get(`https://www.beatport.com${artistLink}/tracks?per-page=50`)
-            .then((artistResult)=>{
-              // slice to <script id="data-objects">
-              let start1 = artistResult.data.indexOf("data-objects");
-              let string1 = artistResult.data.slice(start1);      
-              //slice to "tracks"
-              let start2 = string1.indexOf('"tracks"');
-              let string2 = string1.slice(start2);
-              
-              //end slice to window.Sliders
-              let end1 = string2.indexOf("window.Sliders");
-              let end2 = end1 - 12;
-              let string3 = string2.slice(0,end2);
-              let string4 = `{${string3}}`;
-              let jsonObj = JSON.parse(string4);
-              let tracksObjArr = jsonObj.tracks;
-              for (var i = 0; i < tracksObjArr.length; i++) {
-                let selectedObj = {};
-                let artistNames = [];
-                for (var k = 0; k < tracksObjArr[i].artists.length; k++) {
-                  artistNames.push(tracksObjArr[i].artists[k].name);
-                }
-                selectedObj.artistName = artistNames.join(', ');
-                selectedObj.trackCensoredName = tracksObjArr[i].title;
-                selectedObj.trackLength = tracksObjArr[i].duration.minutes;
-                selectedObj.releaseDate = tracksObjArr[i].date.released;
-                selectedObj.trackViewUrl = `${bpTrackUrl}${tracksObjArr[i].slug}/${tracksObjArr[i].id}`;
-                selectedObj.database = "Beatport";
-
-                artistBeatportArray.push(selectedObj);
+            .then((data)=>{
+              // Get rid of requests for images
+              let result = cancelImageRequests(data);
+              //  chop & format data into JSON Object
+              let tracksObjArr = beatportJSON(result);
+              if (tracksObjArr.length !== 0){
+                songBeatportArray = beatportSongArrayBuilder(tracksObjArr);
               }
-              resolve(artistBeatportArray);
+              resolve(songBeatportArray);
             });
           } else {
             // empty array
-            resolve(artistBeatportArray);
+            resolve(songBeatportArray);
           }
         });
       });
