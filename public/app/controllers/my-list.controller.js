@@ -17,6 +17,11 @@
         let patchObj = {};
         patchObj = userObj;
         $scope.arraySongObj = userObj.myList;
+        //display alt html if no songs are in myList
+        $scope.myListPlaylistEmpty = true;
+        if (userObj.myList.length > 0){
+          $scope.myListPlaylistEmpty = false;
+        }
         
         $scope.deleteFunction = function(event){
           //get song ID
